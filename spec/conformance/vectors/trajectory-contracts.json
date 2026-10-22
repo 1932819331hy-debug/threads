@@ -1,0 +1,5294 @@
+[
+  {
+    "name": "exported-record-0",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "What is in README.md?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-1",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-00000000000b",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Unicode café 🌍"
+        }
+      },
+      "started_at": 1790000011000,
+      "completed_at": 1790000014000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-00000000000b",
+          "seq": 11,
+          "content": [
+            {
+              "type": "text",
+              "text": "Unicode café 🌍"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-00000000000d",
+          "seq": 13,
+          "content": [
+            {
+              "type": "text",
+              "text": "Done."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-2",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Scan the dependencies and the licenses in the background."
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000017000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Scan the dependencies and the licenses in the background."
+            }
+          ]
+        },
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "call_1",
+              "input": {
+                "agent": "scanner",
+                "background": true,
+                "prompt": "Do your part."
+              },
+              "name": "spawn_agent",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e000-0000-7000-8000-00000000000a",
+          "seq": 10,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "call_2",
+              "input": {
+                "agent": "scanner",
+                "background": true,
+                "prompt": "Do your part."
+              },
+              "name": "spawn_agent",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000010",
+          "seq": 16,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Both scans are running.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "input": {
+              "agent": "scanner",
+              "background": true,
+              "prompt": "Do your part."
+            },
+            "name": "spawn_agent",
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        },
+        {
+          "event_id": "0192e000-0000-7000-8000-00000000000b",
+          "seq": 11,
+          "data": {
+            "call_id": "call_2",
+            "input": {
+              "agent": "scanner",
+              "background": true,
+              "prompt": "Do your part."
+            },
+            "name": "spawn_agent",
+            "request_event_id": "0192e000-0000-7000-8000-000000000009"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000008",
+          "seq": 8,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "deferred",
+            "preview": "scanner started in the background"
+          }
+        },
+        {
+          "event_id": "0192e000-0000-7000-8000-00000000000e",
+          "seq": 14,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_2",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "deferred",
+            "preview": "scanner started in the background"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-3",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000014",
+      "trigger": {
+        "type": "woken",
+        "data": {
+          "causes": [
+            "0192e000-0000-7000-8000-000000000013"
+          ]
+        }
+      },
+      "started_at": 1790000020000,
+      "completed_at": 1790000023000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000016",
+          "seq": 22,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The dependency scan is clean.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000013",
+          "seq": 19,
+          "type": "tool_result_late",
+          "data": {
+            "call_id": "call_1",
+            "completeness": "complete",
+            "is_error": false,
+            "preview": "Done."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-4",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-00000000001a",
+      "trigger": {
+        "type": "woken",
+        "data": {
+          "causes": [
+            "0192e000-0000-7000-8000-000000000019"
+          ]
+        }
+      },
+      "started_at": 1790000026000,
+      "completed_at": 1790000029000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e000-0000-7000-8000-00000000001c",
+          "seq": 28,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Both scans are clean.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000019",
+          "seq": 25,
+          "type": "tool_result_late",
+          "data": {
+            "call_id": "call_2",
+            "completeness": "complete",
+            "is_error": false,
+            "preview": "Done."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-5",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Research batteries."
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000013000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Research batteries."
+            }
+          ]
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "c1",
+              "input": {
+                "agent": "researcher",
+                "task": "Your task, researcher."
+              },
+              "name": "start",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000c",
+          "seq": 12,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Started the researcher.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "c1",
+            "input": {
+              "agent": "researcher",
+              "task": "Your task, researcher."
+            },
+            "name": "start",
+            "request_event_id": "0192e001-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000a",
+          "seq": 10,
+          "type": "tool_result",
+          "data": {
+            "call_id": "c1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "executed",
+            "preview": "{\"member\":{\"generation\":1,\"name\":\"researcher-1\",\"team\":\"0192c000-0000-7000-8000-000000000001\",\"tenant\":\"acme\"},\"status\":\"started\"}"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-6",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_settled",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "output": {
+                "text": "Prices fell."
+              },
+              "status": "completed"
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_settled",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "output": {
+                  "text": "Prices fell."
+                },
+                "status": "completed"
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-7",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Research batteries."
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000013000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Research batteries."
+            }
+          ]
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "c1",
+              "input": {
+                "agent": "researcher",
+                "task": "Your task, researcher."
+              },
+              "name": "start",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000c",
+          "seq": 12,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Started the researcher.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "c1",
+            "input": {
+              "agent": "researcher",
+              "task": "Your task, researcher."
+            },
+            "name": "start",
+            "request_event_id": "0192e001-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000a",
+          "seq": 10,
+          "type": "tool_result",
+          "data": {
+            "call_id": "c1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "executed",
+            "preview": "{\"member\":{\"generation\":1,\"name\":\"researcher-1\",\"team\":\"0192c000-0000-7000-8000-000000000001\",\"tenant\":\"acme\"},\"status\":\"started\"}"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-8",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_settled",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "output": {
+                "text": "Prices fell."
+              },
+              "status": "completed"
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000017000,
+      "completion": {
+        "reason": "error"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_settled",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "output": {
+                  "text": "Prices fell."
+                },
+                "status": "completed"
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-9",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Research batteries."
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000013000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Research batteries."
+            }
+          ]
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "c1",
+              "input": {
+                "agent": "researcher",
+                "task": "Your task, researcher."
+              },
+              "name": "start",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000c",
+          "seq": 12,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Started the researcher.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "c1",
+            "input": {
+              "agent": "researcher",
+              "task": "Your task, researcher."
+            },
+            "name": "start",
+            "request_event_id": "0192e001-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000a",
+          "seq": 10,
+          "type": "tool_result",
+          "data": {
+            "call_id": "c1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "executed",
+            "preview": "{\"member\":{\"generation\":1,\"name\":\"researcher-1\",\"team\":\"0192c000-0000-7000-8000-000000000001\",\"tenant\":\"acme\"},\"status\":\"started\"}"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-10",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000011",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_settled",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "output": {
+                "text": "Prices fell."
+              },
+              "status": "completed"
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000017000,
+      "completed_at": 1790000021000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_settled",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "output": {
+                  "text": "Prices fell."
+                },
+                "status": "completed"
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000014",
+          "seq": 20,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-11",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Scan it."
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000009000,
+      "completion": {
+        "reason": "error"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Scan it."
+            }
+          ]
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "call_1",
+              "input": {
+                "agent": "scanner",
+                "background": true,
+                "prompt": "Do your part."
+              },
+              "name": "spawn_agent",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "input": {
+              "agent": "scanner",
+              "background": true,
+              "prompt": "Do your part."
+            },
+            "name": "spawn_agent",
+            "request_event_id": "0192e001-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000008",
+          "seq": 8,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "deferred",
+            "preview": "scanner started in the background"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-12",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Research batteries."
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000013000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Research batteries."
+            }
+          ]
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "c1",
+              "input": {
+                "agent": "researcher",
+                "task": "Your task, researcher."
+              },
+              "name": "start",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000c",
+          "seq": 12,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Started the researcher.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "c1",
+            "input": {
+              "agent": "researcher",
+              "task": "Your task, researcher."
+            },
+            "name": "start",
+            "request_event_id": "0192e001-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000a",
+          "seq": 10,
+          "type": "tool_result",
+          "data": {
+            "call_id": "c1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "executed",
+            "preview": "{\"member\":{\"generation\":1,\"name\":\"researcher-1\",\"team\":\"0192c000-0000-7000-8000-000000000001\",\"tenant\":\"acme\"},\"status\":\"started\"}"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-13",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Summarize the week."
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000005000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Summarize the week."
+            }
+          ]
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "A quiet week.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-14",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "What is on the list today?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000005000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "What is on the list today?"
+            }
+          ]
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Nothing yet.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-15",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000006",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "body": {
+              "text": "Scan the dependencies."
+            },
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000002",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b3"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "message",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:c1",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b3"
+              },
+              "via": []
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:c1"
+        }
+      },
+      "started_at": 1790000006000,
+      "completed_at": 1790000015000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000006",
+          "seq": 6,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "body": {
+                "text": "Scan the dependencies."
+              },
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b3"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "message",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:c1",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b3"
+                },
+                "via": []
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:c1"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000008",
+          "seq": 8,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "call_1",
+              "input": {
+                "agent": "scanner",
+                "background": true,
+                "prompt": "Do your part."
+              },
+              "name": "spawn_agent",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000e",
+          "seq": 14,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The scan is running.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000009",
+          "seq": 9,
+          "data": {
+            "call_id": "call_1",
+            "input": {
+              "agent": "scanner",
+              "background": true,
+              "prompt": "Do your part."
+            },
+            "name": "spawn_agent",
+            "request_event_id": "0192e001-0000-7000-8000-000000000007"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000c",
+          "seq": 12,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "deferred",
+            "preview": "scanner started in the background"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-16",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "body": {
+              "text": "<b>\"Tom's\" & co</b>"
+            },
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000002",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b3"
+            },
+            "from": {
+              "operator": "0192d000-0000-7000-8000-000000000001"
+            },
+            "kind": "message",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b3:0192d000-0000-7000-8000-000000000001",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b3"
+              },
+              "via": []
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b3:0192d000-0000-7000-8000-000000000001"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000005000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "body": {
+                "text": "<b>\"Tom's\" & co</b>"
+              },
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b3"
+              },
+              "from": {
+                "operator": "0192d000-0000-7000-8000-000000000001"
+              },
+              "kind": "message",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b3:0192d000-0000-7000-8000-000000000001",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b3"
+                },
+                "via": []
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b3:0192d000-0000-7000-8000-000000000001"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Noted.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-17",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-000000000006",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "ask_id": "0192b000-0000-7000-8000-0000000000b2:c2",
+            "body": {
+              "ref": {
+                "bytes": 29,
+                "media_type": "text/plain",
+                "sha256": "3177e192d999b2dfce54660d253f01f41936dd27499914e1ce81cbe07da9af48"
+              }
+            },
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000001",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+            },
+            "deadline": 1790000120000,
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "ask",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:c2",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000001",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:c2"
+        }
+      },
+      "started_at": 1790000006000,
+      "completed_at": 1790000009000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000006",
+          "seq": 6,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "ask_id": "0192b000-0000-7000-8000-0000000000b2:c2",
+              "body": {
+                "ref": {
+                  "bytes": 29,
+                  "media_type": "text/plain",
+                  "sha256": "3177e192d999b2dfce54660d253f01f41936dd27499914e1ce81cbe07da9af48"
+                }
+              },
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000001",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "deadline": 1790000120000,
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "ask",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:c2",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000001",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:c2"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000008",
+          "seq": 8,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Asked.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-18",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000a",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000001",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+            },
+            "code": "stale_member",
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "bounce",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:c3",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000001",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:c3"
+        }
+      },
+      "started_at": 1790000010000,
+      "completed_at": 1790000013000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000a",
+          "seq": 10,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000001",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "code": "stale_member",
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "bounce",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:c3",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000001",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:c3"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000c",
+          "seq": 12,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Bounced.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-19",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000e",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000001",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_settled",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:c4",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000005:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000001",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "output": {
+                "ref": {
+                  "bytes": 16,
+                  "media_type": "text/plain",
+                  "sha256": "6f9cfe4d5f84c488a885c9ea20e4db507a0be961c8343e6d9ea389b79927ee09"
+                }
+              },
+              "status": "completed"
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:c4"
+        }
+      },
+      "started_at": 1790000014000,
+      "completed_at": 1790000017000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000e",
+          "seq": 14,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000001",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_settled",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:c4",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000005:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000001",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "output": {
+                  "ref": {
+                    "bytes": 16,
+                    "media_type": "text/plain",
+                    "sha256": "6f9cfe4d5f84c488a885c9ea20e4db507a0be961c8343e6d9ea389b79927ee09"
+                  }
+                },
+                "status": "completed"
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:c4"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000010",
+          "seq": 16,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Settled.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "exported-record-20",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000d1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000d1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Is INV-1001 paid?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000016000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Is INV-1001 paid?"
+            }
+          ]
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "c1",
+              "input": {
+                "question": "Is INV-1001 paid?",
+                "to": "billing"
+              },
+              "name": "ask",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Here is what billing said.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "c1",
+            "input": {
+              "question": "Is INV-1001 paid?",
+              "to": "billing"
+            },
+            "name": "ask",
+            "request_event_id": "0192e001-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000d",
+          "seq": 13,
+          "type": "tool_result",
+          "data": {
+            "call_id": "c1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "executed",
+            "preview": "{\"ask_id\":\"0192b000-0000-7000-8000-0000000000d1:c1\",\"member\":{\"generation\":1,\"name\":\"billing\",\"team\":\"e34fb000-e656-8122-a748-65b36a92d548\",\"tenant\":\"acme\"},\"status\":\"answered\",\"text\":\"Paid.\"}"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-21",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000c1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000c1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "ask_id": "0192b000-0000-7000-8000-0000000000d1:c1",
+            "body": {
+              "text": "Is INV-1001 paid?"
+            },
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000005",
+              "thread_id": "0192a000-0000-7000-8000-0000000000d1"
+            },
+            "deadline": 1790000600000,
+            "from": {
+              "caller": {
+                "agent": "support",
+                "branch_id": "0192b000-0000-7000-8000-0000000000d1",
+                "thread_id": "0192a000-0000-7000-8000-0000000000d1"
+              }
+            },
+            "kind": "ask",
+            "mail_id": "0192b000-0000-7000-8000-0000000000d1:c1",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000d1"
+              },
+              "via": []
+            },
+            "team": "e34fb000-e656-8122-a748-65b36a92d548",
+            "to": {
+              "generation": 1,
+              "name": "billing"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000d1:c1"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000011000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "ask_id": "0192b000-0000-7000-8000-0000000000d1:c1",
+              "body": {
+                "text": "Is INV-1001 paid?"
+              },
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000005",
+                "thread_id": "0192a000-0000-7000-8000-0000000000d1"
+              },
+              "deadline": 1790000600000,
+              "from": {
+                "caller": {
+                  "agent": "support",
+                  "branch_id": "0192b000-0000-7000-8000-0000000000d1",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000d1"
+                }
+              },
+              "kind": "ask",
+              "mail_id": "0192b000-0000-7000-8000-0000000000d1:c1",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000d1"
+                },
+                "via": []
+              },
+              "team": "e34fb000-e656-8122-a748-65b36a92d548",
+              "to": {
+                "generation": 1,
+                "name": "billing"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000d1:c1"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "r1",
+              "input": {
+                "ask_id": "0192b000-0000-7000-8000-0000000000d1:c1",
+                "text": "Paid."
+              },
+              "name": "reply",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000a",
+          "seq": 10,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Answered support.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "r1",
+            "input": {
+              "ask_id": "0192b000-0000-7000-8000-0000000000d1:c1",
+              "text": "Paid."
+            },
+            "name": "reply",
+            "request_event_id": "0192e001-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000008",
+          "seq": 8,
+          "type": "tool_result",
+          "data": {
+            "call_id": "r1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "executed",
+            "preview": "{\"id\":\"0192b000-0000-7000-8000-0000000000c1:r1\",\"status\":\"sent\"}"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exported-record-22",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000d1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000d1",
+      "turn_id": "0192e001-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "Is INV-1001 paid?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000016000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000002",
+          "seq": 2,
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Is INV-1001 paid?"
+            }
+          ]
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000004",
+          "seq": 4,
+          "role": "assistant",
+          "content": [
+            {
+              "call_id": "c1",
+              "input": {
+                "question": "Is INV-1001 paid?",
+                "to": "billing"
+              },
+              "name": "ask",
+              "type": "tool_use"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Here is what billing said.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "c1",
+            "input": {
+              "question": "Is INV-1001 paid?",
+              "to": "billing"
+            },
+            "name": "ask",
+            "request_event_id": "0192e001-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000d",
+          "seq": 13,
+          "type": "tool_result",
+          "data": {
+            "call_id": "c1",
+            "completeness": "complete",
+            "is_error": false,
+            "origin": "executed",
+            "preview": "{\"ask_id\":\"0192b000-0000-7000-8000-0000000000d1:c1\",\"result\":{\"error\":{\"code\":\"pin_mismatch\",\"message\":\"rebind failed: pin_mismatch\"},\"member\":{\"generation\":1,\"name\":\"billing\",\"team\":\"e34fb000-e656-8122-a748-65b36a92d548\",\"tenant\":\"acme\"},\"status\":\"failed\"},\"status\":\"member_ended\"}"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "missing-text-and-content",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "both-text-and-content",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "input",
+          "content": [
+            {
+              "type": "text",
+              "text": "content"
+            }
+          ]
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "content-only",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "content": [
+            {
+              "type": "text",
+              "text": "content"
+            }
+          ]
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "team-task-missing-mail-id",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "team_task",
+          "text": "input"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "team-task-mail-id",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "team_task",
+          "text": "input",
+          "mail_id": "0192b000-0000-7000-8000-000000000001:contract"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "api-forbids-mail-id",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "input",
+          "mail_id": "0192b000-0000-7000-8000-000000000001:contract"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "cli-forbids-a2a",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "cli",
+          "text": "input",
+          "a2a": {
+            "message_id": "message",
+            "context_id": "context"
+          }
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "api-a2a",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "input",
+          "a2a": {
+            "message_id": "message",
+            "context_id": "context"
+          }
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "empty-budget",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "input",
+          "budget": {}
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "positive-budget",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "input",
+          "budget": {
+            "max_turns": 1
+          }
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "zero-budget",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "input",
+          "budget": {
+            "max_turns": 0
+          }
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "boolean-format-version",
+    "valid": false,
+    "record": {
+      "format_version": true,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "What is in README.md?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "extra-root-field",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "What is in README.md?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ],
+      "unexpected": true
+    }
+  },
+  {
+    "name": "non-error-completion-code",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "What is in README.md?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn",
+        "code": "content_unsupported"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "error-completion-code",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "What is in README.md?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "error",
+        "code": "content_unsupported"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "error-completion-no-code",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "What is in README.md?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "error"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "text",
+              "text": "What is in README.md?"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "settled-mail-missing-result",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_settled",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_settled",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "empty-text-body",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_settled",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "output": {},
+              "status": "completed"
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_settled",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "output": {},
+                "status": "completed"
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "both-text-and-ref",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_settled",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "output": {
+                "text": "text",
+                "ref": {
+                  "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "bytes": 1,
+                  "media_type": "text/plain"
+                }
+              },
+              "status": "completed"
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_settled",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "output": {
+                  "text": "text",
+                  "ref": {
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "bytes": 1,
+                    "media_type": "text/plain"
+                  }
+                },
+                "status": "completed"
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "text-body-inline",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_settled",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "output": {
+                "text": "text"
+              },
+              "status": "completed"
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_settled",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "output": {
+                  "text": "text"
+                },
+                "status": "completed"
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "text-body-ref",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_settled",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "output": {
+                "ref": {
+                  "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "bytes": 1,
+                  "media_type": "text/plain"
+                }
+              },
+              "status": "completed"
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_settled",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "output": {
+                  "ref": {
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "bytes": 1,
+                    "media_type": "text/plain"
+                  }
+                },
+                "status": "completed"
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "ancestor-budget-missing-owner",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_ended",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "status": "budget_exhausted",
+              "budget": {
+                "scope": "ancestor",
+                "limit": "max_turns",
+                "limit_value": 1,
+                "observed": 2,
+                "observed_is_upper_bound": false
+              }
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_ended",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "status": "budget_exhausted",
+                "budget": {
+                  "scope": "ancestor",
+                  "limit": "max_turns",
+                  "limit_value": 1,
+                  "observed": 2,
+                  "observed_is_upper_bound": false
+                }
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "ancestor-budget-owner",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_ended",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "status": "budget_exhausted",
+              "budget": {
+                "scope": "ancestor",
+                "limit": "max_turns",
+                "limit_value": 1,
+                "observed": 2,
+                "observed_is_upper_bound": false,
+                "owner_thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              }
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_ended",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "status": "budget_exhausted",
+                "budget": {
+                  "scope": "ancestor",
+                  "limit": "max_turns",
+                  "limit_value": 1,
+                  "observed": 2,
+                  "observed_is_upper_bound": false,
+                  "owner_thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                }
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "local-budget-forbids-owner",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_ended",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "status": "budget_exhausted",
+              "budget": {
+                "scope": "thread",
+                "limit": "max_turns",
+                "limit_value": 1,
+                "observed": 2,
+                "observed_is_upper_bound": false,
+                "owner_thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              }
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_ended",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "status": "budget_exhausted",
+                "budget": {
+                  "scope": "thread",
+                  "limit": "max_turns",
+                  "limit_value": 1,
+                  "observed": 2,
+                  "observed_is_upper_bound": false,
+                  "owner_thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                }
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "local-budget-no-owner",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-0000000000b1",
+      "branch_id": "0192b000-0000-7000-8000-0000000000b1",
+      "turn_id": "0192e001-0000-7000-8000-00000000000f",
+      "trigger": {
+        "type": "message_received",
+        "data": {
+          "envelope": {
+            "causal": {
+              "event_id": "0192e001-0000-7000-8000-000000000008",
+              "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+            },
+            "from": {
+              "generation": 1,
+              "name": "researcher-1",
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "tenant": "acme"
+            },
+            "kind": "member_ended",
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+            "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+            "provenance": {
+              "principal": {
+                "issuer": "api",
+                "subject": "alice",
+                "tenant": "acme"
+              },
+              "root_request": {
+                "event_id": "0192e001-0000-7000-8000-000000000002",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+              },
+              "via": []
+            },
+            "result": {
+              "member": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "status": "budget_exhausted",
+              "budget": {
+                "scope": "thread",
+                "limit": "max_turns",
+                "limit_value": 1,
+                "observed": 2,
+                "observed_is_upper_bound": false
+              }
+            },
+            "team": "0192c000-0000-7000-8000-000000000001",
+            "to": {
+              "generation": 1,
+              "name": "lead"
+            }
+          },
+          "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+        }
+      },
+      "started_at": 1790000015000,
+      "completed_at": 1790000018000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "event_id": "0192e001-0000-7000-8000-00000000000f",
+          "seq": 15,
+          "role": "mail",
+          "data": {
+            "envelope": {
+              "causal": {
+                "event_id": "0192e001-0000-7000-8000-000000000008",
+                "thread_id": "0192a000-0000-7000-8000-0000000000b2"
+              },
+              "from": {
+                "generation": 1,
+                "name": "researcher-1",
+                "team": "0192c000-0000-7000-8000-000000000001",
+                "tenant": "acme"
+              },
+              "kind": "member_ended",
+              "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009",
+              "monitor_id": "0192b000-0000-7000-8000-0000000000b1:0192e001-0000-7000-8000-000000000008:task",
+              "provenance": {
+                "principal": {
+                  "issuer": "api",
+                  "subject": "alice",
+                  "tenant": "acme"
+                },
+                "root_request": {
+                  "event_id": "0192e001-0000-7000-8000-000000000002",
+                  "thread_id": "0192a000-0000-7000-8000-0000000000b1"
+                },
+                "via": []
+              },
+              "result": {
+                "member": {
+                  "generation": 1,
+                  "name": "researcher-1",
+                  "team": "0192c000-0000-7000-8000-000000000001",
+                  "tenant": "acme"
+                },
+                "status": "budget_exhausted",
+                "budget": {
+                  "scope": "thread",
+                  "limit": "max_turns",
+                  "limit_value": 1,
+                  "observed": 2,
+                  "observed_is_upper_bound": false
+                }
+              },
+              "team": "0192c000-0000-7000-8000-000000000001",
+              "to": {
+                "generation": 1,
+                "name": "lead"
+              }
+            },
+            "mail_id": "0192b000-0000-7000-8000-0000000000b2:0192e001-0000-7000-8000-000000000009"
+          }
+        },
+        {
+          "event_id": "0192e001-0000-7000-8000-000000000011",
+          "seq": 17,
+          "role": "assistant",
+          "content": [
+            {
+              "text": "The researcher says prices fell.",
+              "type": "text"
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [],
+      "tool_results": []
+    }
+  },
+  {
+    "name": "image-text/plain",
+    "valid": false,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "What is in README.md?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "image_ref",
+              "ref": {
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "bytes": 1,
+                "media_type": "text/plain"
+              },
+              "width": 1,
+              "height": 1
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "image-image/png",
+    "valid": true,
+    "record": {
+      "format_version": 1,
+      "thread_id": "0192a000-0000-7000-8000-000000000001",
+      "branch_id": "0192b000-0000-7000-8000-000000000001",
+      "turn_id": "0192e000-0000-7000-8000-000000000002",
+      "trigger": {
+        "type": "user_input",
+        "data": {
+          "source": "api",
+          "text": "What is in README.md?"
+        }
+      },
+      "started_at": 1790000002000,
+      "completed_at": 1790000010000,
+      "completion": {
+        "reason": "end_turn"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "event_id": "0192e000-0000-7000-8000-000000000002",
+          "seq": 2,
+          "content": [
+            {
+              "type": "image_ref",
+              "ref": {
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "bytes": 1,
+                "media_type": "image/png"
+              },
+              "width": 1,
+              "height": 1
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000004",
+          "seq": 4,
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "tool_use"
+        },
+        {
+          "role": "assistant",
+          "event_id": "0192e000-0000-7000-8000-000000000009",
+          "seq": 9,
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "completeness": "complete",
+          "stop_reason": "end_turn"
+        }
+      ],
+      "tool_calls": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000005",
+          "seq": 5,
+          "data": {
+            "call_id": "call_1",
+            "name": "read_file",
+            "input": {
+              "path": "README.md"
+            },
+            "request_event_id": "0192e000-0000-7000-8000-000000000003"
+          }
+        }
+      ],
+      "tool_results": [
+        {
+          "event_id": "0192e000-0000-7000-8000-000000000007",
+          "seq": 7,
+          "type": "tool_result",
+          "data": {
+            "call_id": "call_1",
+            "is_error": false,
+            "completeness": "complete",
+            "preview": "# demo\n",
+            "origin": "executed"
+          }
+        }
+      ]
+    }
+  }
+]

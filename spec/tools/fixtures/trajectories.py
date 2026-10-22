@@ -2,13 +2,15 @@
 
 from pathlib import Path
 
-from .trajectory_turns import inputs, rows as turn_rows
 from .common import BRANCH, CASES, obj, tokens
 from .jcs import JsonValue, canonical
 from .log import Log
 from .pieces import READ_FILE, dump, read_turn, started, user
+from .trajectory_contracts import rows as contract_rows
+from .trajectory_turns import inputs, rows as turn_rows
 
 VECTOR = CASES.parent / "vectors" / "trajectories.json"
+CONTRACTS = CASES.parent / "vectors" / "trajectory-contracts.json"
 
 
 def rows(cases: Path = CASES) -> list[JsonValue]:
@@ -92,9 +94,15 @@ def rows(cases: Path = CASES) -> list[JsonValue]:
 
 
 def write(cases: Path = CASES) -> None:
-    VECTOR.write_text(dump(rows(cases)), encoding="utf-8")
+    values = rows(cases)
+    VECTOR.write_text(dump(values), encoding="utf-8")
+    CONTRACTS.write_text(dump(contract_rows(values)), encoding="utf-8")
 
 
 def check(cases: Path = CASES) -> list[str]:
-    current = VECTOR.exists() and VECTOR.read_text(encoding="utf-8") == dump(rows(cases))
-    return [] if current else ["trajectories.json is stale"]
+    values = rows(cases)
+    expected = ((VECTOR, values), (CONTRACTS, contract_rows(values)))
+    return [
+        f"{path.name} is stale" for path, records in expected
+        if not path.exists() or path.read_text(encoding="utf-8") != dump(records)
+    ]

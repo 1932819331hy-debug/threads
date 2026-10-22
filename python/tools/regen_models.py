@@ -23,7 +23,7 @@ from eval_models import HEADER as EVAL_HEADER
 from eval_models import combined_eval_schema
 from host_api_models import HEADER as HOST_HEADER
 from host_api_models import combined_schema, defined_names, keep_host_shapes, open_shapes
-from schema_normalize import Normalizer, Obj, as_obj, normalize
+from schema_normalize import Normalizer, Obj, as_obj, is_condition, normalize
 
 PYTHON_DIR = Path(__file__).resolve().parent.parent
 SCHEMA = PYTHON_DIR.parent / "spec" / "schema" / "events.v1.schema.json"
@@ -249,12 +249,17 @@ def generate_rooted(workdir: Path, schema: Path, name: str, header: str) -> str:
     root: Obj = as_obj(json.loads(schema.read_text(encoding="utf-8")))
     defs = as_obj(root.get("$defs", {}))
     body = {k: v for k, v in root.items() if k not in ("$id", "$schema", "$defs")}
-    # Unions of tagged objects get their discriminator, as the events' unions do.
-    tagged = Normalizer({"$defs": defs})
-    for node in defs.values():
-        tagged.add_discriminator(as_obj(node))
+    # Preserve structural intersections and cross-field rules just as for events.
+    # Condition-only definitions are inlined by norm, not emitted as loose models.
+    definitions = {**defs, name: body}
+    normalizer = Normalizer({"$defs": definitions})
+    normalized = {
+        key: normalizer.norm(node)
+        for key, node in definitions.items()
+        if not is_condition(as_obj(node))
+    }
     wrapped = workdir / f"{name}.json"
-    wrapped.write_text(json.dumps({"$defs": {**defs, name: body}}), encoding="utf-8")
+    wrapped.write_text(json.dumps({"$defs": normalized}), encoding="utf-8")
     raw = codegen(wrapped, workdir / f"{name}.py", header)
     source = add_exports(annotate_config(raw))
     source = ruff(source, "check", "--fix", "--select=I")

@@ -69,3 +69,12 @@ Use the existing global `--store` and `--tenant` options (before `export` in
 Python). `--jsonl` cannot be combined with a positional branch or `--bundle`.
 Thread/since filters require `--jsonl`. With no --jsonl, raw branch and portable
 bundle exports keep their current behavior.
+
+## Conformance
+
+`spec/conformance/vectors/trajectories.json` pins completed-turn JSONL bytes.
+`trajectory-contracts.json` pins accepted and rejected boundary records, including
+cross-field input, mail, budget and completion rules. Both languages consume these
+generated vectors. Regenerate them with `python spec/tools/gen_fixtures.py`;
+Python models preserve the same schema rules through the existing normalizer and
+`StrictModel`, rather than duplicating validation rules by hand.
