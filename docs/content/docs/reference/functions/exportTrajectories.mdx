@@ -1,0 +1,54 @@
+---
+title: "exportTrajectories / export_trajectories"
+description: "Returns canonical UTF-8 JSONL: one record per completed user turn."
+icon: "SquareFunction"
+---
+
+See spec/trajectories.md and schema/trajectory.v1.schema.json. Reads only this Store's tenant; never resolves secrets or runs models/tools. All completion reasons are retained. Incomplete tails and duplicated fork ancestor completions are omitted. Ordered by thread id, branch id and completion sequence. Invalid options throw ConfigError invalid_config.
+
+Import from `threadsai` (TypeScript) or `threadsai` (Python).
+
+<Tabs items={["TypeScript", "Python"]} groupId="lang" persist>
+<Tab value="TypeScript">
+
+```ts
+function exportTrajectories(store: Store, options?: {
+  threads?: readonly string[];
+  since?: number;
+}): Promise<Result<Uint8Array>>
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+async def export_trajectories(
+    store: Store,
+    *,
+    threads: Sequence[str] | None = None,
+    since: int | None = None,
+) -> Ok[bytes] | Err[Failure]
+```
+
+</Tab>
+</Tabs>
+
+## Parameters
+
+<Field name="store" type={"Store"} required>
+  The tenant-scoped log store to read. See [Store](/docs/reference/types/Store).
+</Field>
+
+<Field name="threads" type={"readonly string[]"}>
+  Omitted: all tenant threads. Empty: none. Missing or foreign selection is not_found.
+</Field>
+
+<Field name="since" type={"number"}>
+  Inclusive completion timestamp in Unix epoch milliseconds, 0 through 2^53-1. Omitted: no time filter.
+</Field>
+
+## Returns
+
+`Uint8Array`
+
+**Returns an error value** with one of these codes: `not_found`, `branch_not_found`, `invalid_line`, `unsupported_format`, `unsupported_critical_event`, `prev_hash_mismatch`, `seq_mismatch`, `seq_conflict`, `invalid_transition`, `head_mismatch`, `log_corrupt`, `secret_in_stored_bytes`.

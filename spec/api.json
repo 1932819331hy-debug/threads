@@ -320,6 +320,16 @@
     {"id": "team-deletion-results", "open": "Gate 1 (v02 §4.15) makes deleting a team's threads a fixed point that can be busy or refused.", "choice": "Store deletion (TS deleteThread/deleteTenant, Python delete_thread/delete_tenant, and threadsai delete) returns a result: the number of threads deleted, or not_found, busy (a live lease or an effect in doubt in the deletion set; nothing written) or thread_in_team (a member thread or team log whose lead is not deleted with it). Python's delete_thread moves from a bare int to Ok[int] | Err[DeleteError].", "why": "A delete that would erase a live executor's only recovery log must refuse, and the caller must see why."}
   ],
   "functions": {
+    "exportTrajectories": {
+      "ts": "exportTrajectories", "py": "export_trajectories", "package": "core", "async": true,
+      "doc": "Returns canonical UTF-8 JSONL: one record per completed user turn. See spec/trajectories.md and schema/trajectory.v1.schema.json. Reads only this Store's tenant; never resolves secrets or runs models/tools. All completion reasons are retained. Incomplete tails and duplicated fork ancestor completions are omitted. Ordered by thread id, branch id and completion sequence. Invalid options throw ConfigError invalid_config.",
+      "params": [
+        {"name": "store", "kind": "positional", "type": {"$ref": "#/types/Store"}, "required": true, "doc": "The tenant-scoped log store to read."},
+        {"name": "threads", "kind": "option", "type": {"array": {"prim": "string"}}, "required": false, "doc": "Omitted: all tenant threads. Empty: none. Missing or foreign selection is not_found."},
+        {"name": "since", "kind": "option", "type": {"prim": "integer"}, "required": false, "doc": "Inclusive completion timestamp in Unix epoch milliseconds, 0 through 2^53-1. Omitted: no time filter."}
+      ],
+      "returns": {"result": {"prim": "bytes"}, "errors": ["not_found", "branch_not_found", "invalid_line", "unsupported_format", "unsupported_critical_event", "prev_hash_mismatch", "seq_mismatch", "seq_conflict", "invalid_transition", "head_mismatch", "log_corrupt", "secret_in_stored_bytes"]}
+    },
     "otel": {
       "ts": "otel",
       "py": "otel",
@@ -7302,6 +7312,7 @@
       "via": "the store's branch export (schema README, JSONL), or Thread.export with --bundle",
       "doc": "Without --bundle, the JSONL export on stdout. With it, a portable bundle directory (log.jsonl, artifacts/, bundle.json) whose path must not exist; prints the path."
     },
+    {"usage": "threadsai export --jsonl [--thread UUID]... [--since MILLISECONDS]", "via": "exportTrajectories", "doc": "Completed-turn training JSONL on stdout. Filters require --jsonl; --jsonl excludes a branch positional argument and --bundle. Global store/tenant flags select the source."},
     {
       "usage": "threadsai import <dir|file>",
       "via": "importThread",

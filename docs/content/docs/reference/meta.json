@@ -6,6 +6,7 @@
   "pages": [
     "overview",
     "---[SquareFunction]Functions---",
+    "functions/exportTrajectories",
     "functions/agent",
     "functions/codingAgent",
     "functions/dynamicAgent",

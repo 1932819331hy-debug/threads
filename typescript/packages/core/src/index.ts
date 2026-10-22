@@ -46,3 +46,5 @@ export { brave, exa, tavily } from "./tools/search-backends";
 export type { WebTransport } from "./tools/web-transport";
 export * from "./verify";
 export { VERSION } from "./version";
+
+export { exportTrajectories, type Trajectory, type TrajectoryOptions } from "./trajectories";

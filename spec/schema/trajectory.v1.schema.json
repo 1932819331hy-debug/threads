@@ -1,0 +1,857 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Content-addressed bytes. The artifact is durable before any event references it; readers verify sha256 and length.",
+      "properties": {
+        "bytes": {
+          "$ref": "#/$defs/Int"
+        },
+        "media_type": {
+          "pattern": "^[a-z0-9.+-]+/[a-z0-9.+-]+$",
+          "type": "string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Sha256"
+        }
+      },
+      "required": [
+        "sha256",
+        "bytes",
+        "media_type"
+      ],
+      "type": "object"
+    },
+    "AudioPart": {
+      "additionalProperties": false,
+      "description": "Recorded (non-realtime) audio, e.g. a channel voice note. Only adapters that declare audio input accept it; others fail pre-dispatch with content_unsupported. Realtime sessions are out of scope.",
+      "properties": {
+        "duration_ms": {
+          "$ref": "#/$defs/PosInt"
+        },
+        "ref": {
+          "$ref": "#/$defs/AudioRef"
+        },
+        "transcript": {
+          "description": "Host-produced transcript, shown only to adapters without audio input when the agent opts in.",
+          "type": "string"
+        },
+        "type": {
+          "const": "audio_ref"
+        }
+      },
+      "required": [
+        "type",
+        "ref",
+        "duration_ms"
+      ],
+      "type": "object"
+    },
+    "AudioRef": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "properties": {
+            "media_type": {
+              "enum": [
+                "audio/wav",
+                "audio/mpeg",
+                "audio/ogg",
+                "audio/webm",
+                "audio/mp4"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "BranchId": {
+      "$ref": "#/$defs/Uuid"
+    },
+    "CallId": {
+      "description": "Tool call id; may be provider-issued. The effect key is derived: <branch_id of the tool_call event>:<call_id>.",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$",
+      "type": "string"
+    },
+    "CitationPart": {
+      "additionalProperties": false,
+      "description": "Annotates the text part immediately before it. source_id is a URL (web), doc_id (knowledge, with version), document artifact sha256 (document) or call_id (tool_result). ref and span name the exact cited bytes.",
+      "properties": {
+        "cited_text": {
+          "type": "string"
+        },
+        "ref": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "source_id": {
+          "$ref": "#/$defs/NonEmpty"
+        },
+        "source_kind": {
+          "enum": [
+            "web",
+            "knowledge",
+            "document",
+            "tool_result"
+          ]
+        },
+        "span": {
+          "$ref": "#/$defs/Span"
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "const": "citation"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "source_kind",
+        "source_id"
+      ],
+      "type": "object"
+    },
+    "DocumentPart": {
+      "additionalProperties": false,
+      "properties": {
+        "pages": {
+          "$ref": "#/$defs/PosInt"
+        },
+        "ref": {
+          "$ref": "#/$defs/DocumentRef"
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "const": "document_ref"
+        }
+      },
+      "required": [
+        "type",
+        "ref"
+      ],
+      "type": "object"
+    },
+    "DocumentRef": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "properties": {
+            "media_type": {
+              "enum": [
+                "application/pdf",
+                "text/plain",
+                "text/markdown",
+                "text/html",
+                "text/csv",
+                "application/json"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "EventId": {
+      "$ref": "#/$defs/Uuid"
+    },
+    "HostedToolPart": {
+      "additionalProperties": false,
+      "description": "A provider-executed tool use and its result, inside one model attempt. The execution owner is the provider: it is never turned into a tool_call or dispatched locally. ref holds the exact provider blocks; readable citations follow as citation parts.",
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/Name"
+        },
+        "model": {
+          "$ref": "#/$defs/NonEmpty"
+        },
+        "name": {
+          "$ref": "#/$defs/Name"
+        },
+        "provider": {
+          "$ref": "#/$defs/Name"
+        },
+        "ref": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "type": {
+          "const": "hosted_tool"
+        }
+      },
+      "required": [
+        "type",
+        "provider",
+        "model",
+        "format",
+        "name",
+        "ref"
+      ],
+      "type": "object"
+    },
+    "ImagePart": {
+      "additionalProperties": false,
+      "description": "An image the model sees. Bytes are always an artifact; width and height are what the adapter needs for scaling (computer use coordinates).",
+      "properties": {
+        "alt": {
+          "type": "string"
+        },
+        "height": {
+          "$ref": "#/$defs/PosInt"
+        },
+        "ref": {
+          "$ref": "#/$defs/ImageRef"
+        },
+        "type": {
+          "const": "image_ref"
+        },
+        "width": {
+          "$ref": "#/$defs/PosInt"
+        }
+      },
+      "required": [
+        "type",
+        "ref",
+        "width",
+        "height"
+      ],
+      "type": "object"
+    },
+    "ImageRef": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "properties": {
+            "media_type": {
+              "enum": [
+                "image/png",
+                "image/jpeg",
+                "image/gif",
+                "image/webp"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "InputPart": {
+      "description": "What a user or channel may send. No tool_use: user content never enters dispatch.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TextPart"
+        },
+        {
+          "$ref": "#/$defs/ImagePart"
+        },
+        {
+          "$ref": "#/$defs/DocumentPart"
+        },
+        {
+          "$ref": "#/$defs/AudioPart"
+        }
+      ]
+    },
+    "Int": {
+      "description": "JSON integer in the cross-language safe range.",
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "JsonObject": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "type": "object"
+    },
+    "JsonValue": {
+      "description": "Any validated JSON value (tool input, model params, MCP payloads). Numbers follow.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "Name": {
+      "pattern": "^[a-z][a-z0-9_]{0,63}$",
+      "type": "string"
+    },
+    "NonEmpty": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "OutputPart": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TextPart"
+        },
+        {
+          "$ref": "#/$defs/ToolUsePart"
+        },
+        {
+          "$ref": "#/$defs/ReasoningPart"
+        },
+        {
+          "$ref": "#/$defs/HostedToolPart"
+        },
+        {
+          "$ref": "#/$defs/CitationPart"
+        },
+        {
+          "$ref": "#/$defs/ImagePart"
+        }
+      ]
+    },
+    "PosInt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Int"
+        },
+        {
+          "minimum": 1
+        }
+      ]
+    },
+    "ReasoningPart": {
+      "additionalProperties": false,
+      "description": "Opaque provider continuation material (Anthropic thinking or redacted_thinking with its signature, OpenAI reasoning items with encrypted content). ref holds the exact provider bytes/JSON. Never rendered as text and never required in a UI. Render v1 emits the part as recorded; an adapter that cannot send it back fails with continuation_unsupported, never drops it silently. Only settings_changed{reasoning_carryover: omit_prior} omits earlier parts.",
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/Name"
+        },
+        "model": {
+          "$ref": "#/$defs/NonEmpty"
+        },
+        "provider": {
+          "$ref": "#/$defs/Name"
+        },
+        "ref": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "summary": {
+          "description": "Provider-supplied readable summary, for display only.",
+          "type": "string"
+        },
+        "type": {
+          "const": "reasoning"
+        }
+      },
+      "required": [
+        "type",
+        "provider",
+        "model",
+        "format",
+        "ref"
+      ],
+      "type": "object"
+    },
+    "ResultPart": {
+      "description": "Ordered, mixed text and media of a tool result. No tool_use.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TextPart"
+        },
+        {
+          "$ref": "#/$defs/ImagePart"
+        },
+        {
+          "$ref": "#/$defs/DocumentPart"
+        },
+        {
+          "$ref": "#/$defs/CitationPart"
+        }
+      ]
+    },
+    "Sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "Span": {
+      "additionalProperties": false,
+      "description": "Half-open range [start, end) in UTF-8 BYTE offsets of the referenced text or artifact bytes. Both ends fall on character boundaries. Python and TypeScript convert from their native string indices; a span never means code units.",
+      "properties": {
+        "end": {
+          "$ref": "#/$defs/Int"
+        },
+        "start": {
+          "$ref": "#/$defs/Int"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "type": "object"
+    },
+    "TextPart": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "const": "text"
+        }
+      },
+      "required": [
+        "type",
+        "text"
+      ],
+      "type": "object"
+    },
+    "ThreadId": {
+      "$ref": "#/$defs/Uuid"
+    },
+    "TimeMs": {
+      "$ref": "#/$defs/Int",
+      "description": "Unix epoch milliseconds. Informational; never used for ordering."
+    },
+    "ToolUsePart": {
+      "additionalProperties": false,
+      "description": "A locally dispatchable call proposed by the model. Only model_response and model_response_recovered may carry it; a tool_call must match one.",
+      "properties": {
+        "call_id": {
+          "$ref": "#/$defs/CallId"
+        },
+        "input": {
+          "$ref": "#/$defs/JsonObject"
+        },
+        "name": {
+          "$ref": "#/$defs/Name"
+        },
+        "type": {
+          "const": "tool_use"
+        }
+      },
+      "required": [
+        "type",
+        "call_id",
+        "name",
+        "input"
+      ],
+      "type": "object"
+    },
+    "TrajectoryBranch": {
+      "additionalProperties": false,
+      "properties": {
+        "branch_id": {
+          "$ref": "#/$defs/BranchId"
+        },
+        "head_verified": {
+          "anyOf": [
+            {
+              "const": 0
+            },
+            {
+              "const": 1
+            }
+          ]
+        },
+        "thread_id": {
+          "$ref": "#/$defs/ThreadId"
+        }
+      },
+      "required": [
+        "branch_id",
+        "thread_id",
+        "head_verified"
+      ],
+      "type": "object"
+    },
+    "TrajectoryOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "since": {
+          "$ref": "#/$defs/TimeMs"
+        },
+        "threads": {
+          "items": {
+            "$ref": "#/$defs/ThreadId"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "Uuid": {
+      "description": "Lowercase UUID string. Writers MUST generate UUIDv7; readers accept any lowercase UUID, so the version is not an admission rule.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "type": "string"
+    }
+  },
+  "$id": "urn:threads:schema:trajectory:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "branch_id": {
+      "$ref": "#/$defs/BranchId"
+    },
+    "completed_at": {
+      "$ref": "#/$defs/TimeMs"
+    },
+    "completion": {
+      "additionalProperties": false,
+      "if": {
+        "required": [
+          "code"
+        ]
+      },
+      "properties": {
+        "code": {
+          "description": "Only with reason error: the request needed a part the model doesn't declare (content_unsupported) or another provider's continuation (continuation_unsupported), found before any model_request; or the adapter refused the send because its transport bypasses the fence (transport_fence_unsupported, never retried); or the response held a registered secret in provider material that is replayed byte-exact and so can't be redacted (secret_in_provider_output: nothing of it is stored, never retried); or a team member's rebind failed before its first model request: its definition, a tool or a model is not registered here (pin_unavailable), the rebuilt config_hash differs (pin_mismatch), or setting it up kept failing (setup_failed).",
+          "enum": [
+            "content_unsupported",
+            "continuation_unsupported",
+            "transport_fence_unsupported",
+            "secret_in_provider_output",
+            "pin_unavailable",
+            "pin_mismatch",
+            "setup_failed"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "end_turn",
+            "max_turns",
+            "budget_exhausted",
+            "cancelled",
+            "error",
+            "interrupted",
+            "stop_hook_limit",
+            "max_output",
+            "context_exhausted",
+            "output_invalid",
+            "input_denied",
+            "model_unavailable",
+            "handoff"
+          ]
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "then": {
+        "properties": {
+          "reason": {
+            "const": "error"
+          }
+        }
+      },
+      "type": "object"
+    },
+    "format_version": {
+      "const": 1
+    },
+    "messages": {
+      "items": {
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "content": {
+                "items": {
+                  "$ref": "#/$defs/InputPart"
+                },
+                "type": "array"
+              },
+              "event_id": {
+                "$ref": "#/$defs/EventId"
+              },
+              "role": {
+                "const": "user"
+              },
+              "seq": {
+                "$ref": "#/$defs/PosInt"
+              }
+            },
+            "required": [
+              "event_id",
+              "seq",
+              "role",
+              "content"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "completeness": {
+                "enum": [
+                  "complete",
+                  "partial"
+                ]
+              },
+              "content": {
+                "items": {
+                  "$ref": "#/$defs/OutputPart"
+                },
+                "type": "array"
+              },
+              "event_id": {
+                "$ref": "#/$defs/EventId"
+              },
+              "role": {
+                "const": "assistant"
+              },
+              "seq": {
+                "$ref": "#/$defs/PosInt"
+              },
+              "stop_reason": {
+                "description": "Only end_turn, stop_sequence and refusal complete a turn; tool_use dispatches; max_tokens continues; pause_turn re-requests with the paused content as-is, up to context.max_pause_continuations; context_window_exceeded ends the turn context_exhausted; other (a reason the adapter can't name) ends it error. Never success for the last two.",
+                "enum": [
+                  "end_turn",
+                  "tool_use",
+                  "max_tokens",
+                  "stop_sequence",
+                  "refusal",
+                  "pause_turn",
+                  "context_window_exceeded",
+                  "other"
+                ]
+              }
+            },
+            "required": [
+              "event_id",
+              "seq",
+              "role",
+              "content",
+              "completeness",
+              "stop_reason"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "type": "array"
+    },
+    "started_at": {
+      "$ref": "#/$defs/TimeMs"
+    },
+    "thread_id": {
+      "$ref": "#/$defs/ThreadId"
+    },
+    "tool_calls": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "additionalProperties": false,
+            "properties": {
+              "call_id": {
+                "$ref": "#/$defs/CallId"
+              },
+              "input": {
+                "$ref": "#/$defs/JsonObject"
+              },
+              "name": {
+                "$ref": "#/$defs/Name"
+              },
+              "request_event_id": {
+                "$ref": "#/$defs/EventId"
+              }
+            },
+            "required": [
+              "call_id",
+              "name",
+              "input",
+              "request_event_id"
+            ],
+            "type": "object"
+          },
+          "event_id": {
+            "$ref": "#/$defs/EventId"
+          },
+          "seq": {
+            "$ref": "#/$defs/PosInt"
+          }
+        },
+        "required": [
+          "event_id",
+          "seq",
+          "data"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "tool_results": {
+      "items": {
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "additionalProperties": false,
+                "properties": {
+                  "call_id": {
+                    "$ref": "#/$defs/CallId"
+                  },
+                  "completeness": {
+                    "enum": [
+                      "complete",
+                      "partial"
+                    ]
+                  },
+                  "content": {
+                    "items": {
+                      "$ref": "#/$defs/ResultPart"
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "is_error": {
+                    "type": "boolean"
+                  },
+                  "origin": {
+                    "enum": [
+                      "executed",
+                      "materialized_from_commit",
+                      "denied",
+                      "not_executed",
+                      "interrupted",
+                      "deferred",
+                      "answered"
+                    ]
+                  },
+                  "preview": {
+                    "type": "string"
+                  },
+                  "ref": {
+                    "$ref": "#/$defs/ArtifactRef"
+                  }
+                },
+                "required": [
+                  "call_id",
+                  "is_error",
+                  "completeness",
+                  "preview",
+                  "origin"
+                ],
+                "type": "object"
+              },
+              "event_id": {
+                "$ref": "#/$defs/EventId"
+              },
+              "seq": {
+                "$ref": "#/$defs/PosInt"
+              },
+              "type": {
+                "const": "tool_result"
+              }
+            },
+            "required": [
+              "event_id",
+              "seq",
+              "type",
+              "data"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "additionalProperties": false,
+                "properties": {
+                  "call_id": {
+                    "$ref": "#/$defs/CallId"
+                  },
+                  "completeness": {
+                    "enum": [
+                      "complete",
+                      "partial"
+                    ]
+                  },
+                  "content": {
+                    "items": {
+                      "$ref": "#/$defs/ResultPart"
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "is_error": {
+                    "type": "boolean"
+                  },
+                  "preview": {
+                    "type": "string"
+                  },
+                  "ref": {
+                    "$ref": "#/$defs/ArtifactRef"
+                  }
+                },
+                "required": [
+                  "call_id",
+                  "is_error",
+                  "completeness",
+                  "preview"
+                ],
+                "type": "object"
+              },
+              "event_id": {
+                "$ref": "#/$defs/EventId"
+              },
+              "seq": {
+                "$ref": "#/$defs/PosInt"
+              },
+              "type": {
+                "const": "tool_result_late"
+              }
+            },
+            "required": [
+              "event_id",
+              "seq",
+              "type",
+              "data"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "type": "array"
+    },
+    "turn_id": {
+      "$ref": "#/$defs/EventId"
+    }
+  },
+  "required": [
+    "format_version",
+    "thread_id",
+    "branch_id",
+    "turn_id",
+    "started_at",
+    "completed_at",
+    "completion",
+    "messages",
+    "tool_calls",
+    "tool_results"
+  ],
+  "type": "object"
+}

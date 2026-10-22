@@ -3,6 +3,10 @@ the typed API or the store (7 and 8)."""
 
 import json
 import sys
+from collections.abc import Sequence
+
+from threadsai.agents.config import ConfigError
+from threadsai.trajectories import export_trajectories
 
 from threadsai.adapters.loop_resources import holding
 from threadsai.agents.store import Store, now_ms, open_store, scoped, sqlite
@@ -146,4 +150,18 @@ async def gc(path: str, module: str | None, grace_days: float) -> int:
     keep = await sq.run(retention.referenced, read_only=True)
     removed = await sq.sweep_artifacts(keep, now_ms() - int(grace_days * 86_400_000))
     print(f"removed {len(removed)} unreferenced artifacts")
+    return 0
+
+
+async def trajectories(path: str, tenant: str, threads: Sequence[str] | None, since: int | None) -> int:
+    """Training JSONL uses its own API; raw branch/bundle exports keep their format."""
+    try:
+        result = await export_trajectories(_store(path, tenant),
+            threads=None if threads is None else tuple(ThreadId(t) for t in threads), since=since)
+    except ConfigError as error:
+        print(f"{error.code}: {error}", file=sys.stderr)
+        return 2
+    if isinstance(result, Err):
+        return _fail(f"{result.error.code}: {result.error.message}")
+    sys.stdout.buffer.write(result.value)
     return 0

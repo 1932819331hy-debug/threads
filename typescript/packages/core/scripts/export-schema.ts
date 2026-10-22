@@ -7,6 +7,7 @@ import { Tree } from "../src/sandbox/tree/tree";
 import { Bundle } from "../src/thread/bundle";
 import { evalSchema } from "./eval-schema";
 import { specSchema } from "./spec-schema";
+import { trajectorySchema } from "./trajectory-schema";
 import { toolCatalog, toolSchema } from "./tool-catalog";
 
 // bun scripts/export-schema.ts           write spec/schema/events.v1.schema.json
@@ -144,6 +145,8 @@ function bundleSchema(): Json {
   };
 }
 
+const TRAJECTORY = join(import.meta.dir, "../../../../spec/schema/trajectory.v1.schema.json");
+
 const [flag, file = SPEC] = process.argv.slice(2);
 const schema = specSchema();
 if (flag === "--check") {
@@ -155,7 +158,8 @@ if (flag === "--check") {
         check(catalogSchema(), MODEL_CATALOG) +
         check(evalSchema(schema), EVAL) +
         check(treeSchema(), TREE) +
-        check(bundleSchema(), BUNDLE)
+        check(bundleSchema(), BUNDLE) +
+        check(trajectorySchema(), TRAJECTORY)
       : 0);
 } else {
   writeFileSync(SPEC, format(schema));
@@ -165,6 +169,7 @@ if (flag === "--check") {
   writeFileSync(EVAL, format(evalSchema(schema)));
   writeFileSync(TREE, format(treeSchema()));
   writeFileSync(BUNDLE, format(bundleSchema()));
+  writeFileSync(TRAJECTORY, format(trajectorySchema()));
   console.log(
     `wrote ${SPEC}, ${TOOLS}, ${CATALOG}, ${MODEL_CATALOG}, ${EVAL}, ${TREE} and ${BUNDLE}`,
   );

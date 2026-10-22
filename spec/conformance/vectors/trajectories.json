@@ -1,0 +1,533 @@
+[
+  {
+    "branch_id": "0192b000-0000-7000-8000-000000000001",
+    "events": [
+      {
+        "seq": 1,
+        "event_id": "0192e000-0000-7000-8000-000000000001",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "thread_started",
+        "type_version": 1,
+        "time": 1790000001000,
+        "actor": {
+          "kind": "host"
+        },
+        "prev_hash": "a4c28bbb8c786e6cb5caaf2b52d16d7b33607e2cf98edef076a94346089bd1b7",
+        "critical": true,
+        "data": {
+          "agent_name": "demo",
+          "instructions": "You are a helpful agent.",
+          "model": {
+            "provider": "scripted",
+            "name": "scripted-1"
+          },
+          "model_params": {
+            "max_tokens": 1024
+          },
+          "adapter": {
+            "name": "scripted",
+            "version": "1",
+            "settings": {}
+          },
+          "tools": [
+            {
+              "name": "read_file",
+              "description": "Read a file from the sandbox workspace.",
+              "effect_class": "read_only",
+              "input_schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "config_hash": "814c911bc321885f70661e014433a43dcd84b808d210d3f10c9e8e3b4489f598",
+          "sandbox_provider": "fake"
+        }
+      },
+      {
+        "seq": 2,
+        "event_id": "0192e000-0000-7000-8000-000000000002",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "user_input",
+        "type_version": 1,
+        "time": 1790000002000,
+        "actor": {
+          "kind": "user",
+          "principal": {
+            "issuer": "api",
+            "tenant": "acme",
+            "subject": "alice"
+          }
+        },
+        "prev_hash": "9583e7bd01bde8855bbe3ed12fe6cfe8a7de76007ac64e9a031f8c60ec0eb55d",
+        "critical": true,
+        "data": {
+          "source": "api",
+          "text": "What is in README.md?"
+        }
+      },
+      {
+        "seq": 3,
+        "event_id": "0192e000-0000-7000-8000-000000000003",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "model_request",
+        "type_version": 1,
+        "time": 1790000003000,
+        "actor": {
+          "kind": "host"
+        },
+        "prev_hash": "583e585b857348d5ea93864a7d8bd2a4151ef03e732abb984599e59c2325755b",
+        "critical": true,
+        "data": {
+          "attempt": 1,
+          "request_ref": {
+            "sha256": "e0920bbc2776d4bc887421295ea6ddbf1173b45d58259e4d2fb44d1dd44b4bb3",
+            "bytes": 461,
+            "media_type": "application/x-ndjson"
+          },
+          "declared_prefix": {
+            "bytes": 386,
+            "sha256": "862106e35a5b98c8953a59e6e4e8e547992d3931eb45cc87eb7aadf1ad3af715"
+          }
+        }
+      },
+      {
+        "seq": 4,
+        "event_id": "0192e000-0000-7000-8000-000000000004",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "model_response",
+        "type_version": 1,
+        "time": 1790000004000,
+        "actor": {
+          "kind": "model"
+        },
+        "prev_hash": "e46dc236a17e2d038b97e7f25afdd8de177362d080c7bfc25e137144a74b926f",
+        "critical": true,
+        "data": {
+          "request_event_id": "0192e000-0000-7000-8000-000000000003",
+          "content": [
+            {
+              "type": "tool_use",
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              }
+            }
+          ],
+          "stop_reason": "tool_use",
+          "usage": {
+            "input_tokens": 120,
+            "output_tokens": 18
+          },
+          "completeness": "complete"
+        }
+      },
+      {
+        "seq": 5,
+        "event_id": "0192e000-0000-7000-8000-000000000005",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "tool_call",
+        "type_version": 1,
+        "time": 1790000005000,
+        "actor": {
+          "kind": "host"
+        },
+        "prev_hash": "574417ac00977fc926e968809e9c8b0798c65b82df0de5f285a7d046491e5e11",
+        "critical": true,
+        "data": {
+          "call_id": "call_1",
+          "name": "read_file",
+          "input": {
+            "path": "README.md"
+          },
+          "request_event_id": "0192e000-0000-7000-8000-000000000003"
+        }
+      },
+      {
+        "seq": 6,
+        "event_id": "0192e000-0000-7000-8000-000000000006",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "permission_decision",
+        "type_version": 1,
+        "time": 1790000006000,
+        "actor": {
+          "kind": "host"
+        },
+        "prev_hash": "85b3f4e28b6a3fec1e281e26023f4ffc3a1c1502e98ef36b120d607e157927d8",
+        "critical": true,
+        "data": {
+          "call_id": "call_1",
+          "decision": "allow",
+          "source": "policy",
+          "rule_id": "conformance_allow"
+        }
+      },
+      {
+        "seq": 7,
+        "event_id": "0192e000-0000-7000-8000-000000000007",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "tool_result",
+        "type_version": 1,
+        "time": 1790000007000,
+        "actor": {
+          "kind": "tool"
+        },
+        "prev_hash": "1385da1f30b2df1993bbaf3bc4a05f6e766f23669746d02a51661c00b05645f9",
+        "critical": true,
+        "data": {
+          "call_id": "call_1",
+          "is_error": false,
+          "completeness": "complete",
+          "preview": "# demo\n",
+          "origin": "executed"
+        }
+      },
+      {
+        "seq": 8,
+        "event_id": "0192e000-0000-7000-8000-000000000008",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "model_request",
+        "type_version": 1,
+        "time": 1790000008000,
+        "actor": {
+          "kind": "host"
+        },
+        "prev_hash": "efcbdc565295d65bc1017edf56f11d73b0a82b101eca29be6bcd05d1cabdba57",
+        "critical": true,
+        "data": {
+          "attempt": 1,
+          "request_ref": {
+            "sha256": "31da1b009d3f58aab2e77a24ffa450d3d36df99115adf63db80a8d0df33d832f",
+            "bytes": 679,
+            "media_type": "application/x-ndjson"
+          },
+          "declared_prefix": {
+            "bytes": 386,
+            "sha256": "862106e35a5b98c8953a59e6e4e8e547992d3931eb45cc87eb7aadf1ad3af715"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "event_id": "0192e000-0000-7000-8000-000000000009",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "model_response",
+        "type_version": 1,
+        "time": 1790000009000,
+        "actor": {
+          "kind": "model"
+        },
+        "prev_hash": "412c7457561a627e0aab7985291ef3b3fe79338aa6c60f5e000f36bf0532fca6",
+        "critical": true,
+        "data": {
+          "request_event_id": "0192e000-0000-7000-8000-000000000008",
+          "content": [
+            {
+              "type": "text",
+              "text": "README.md contains one heading: demo."
+            }
+          ],
+          "stop_reason": "end_turn",
+          "usage": {
+            "input_tokens": 160,
+            "output_tokens": 12
+          },
+          "completeness": "complete"
+        }
+      },
+      {
+        "seq": 10,
+        "event_id": "0192e000-0000-7000-8000-00000000000a",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "turn_completed",
+        "type_version": 1,
+        "time": 1790000010000,
+        "actor": {
+          "kind": "host"
+        },
+        "prev_hash": "75181a26c944bba07de37e139dba90428c05c11871ef35516915e4ce031b47a2",
+        "critical": true,
+        "data": {
+          "reason": "end_turn"
+        }
+      },
+      {
+        "seq": 11,
+        "event_id": "0192e000-0000-7000-8000-00000000000b",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "user_input",
+        "type_version": 1,
+        "time": 1790000011000,
+        "actor": {
+          "kind": "user",
+          "principal": {
+            "issuer": "api",
+            "tenant": "acme",
+            "subject": "alice"
+          }
+        },
+        "prev_hash": "10af3332fb0e2765bfce66a53f2e569a020534971c05a7cb98242b087dd9b4c7",
+        "critical": true,
+        "data": {
+          "source": "api",
+          "text": "Unicode café 🌍"
+        }
+      },
+      {
+        "seq": 12,
+        "event_id": "0192e000-0000-7000-8000-00000000000c",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "model_request",
+        "type_version": 1,
+        "time": 1790000012000,
+        "actor": {
+          "kind": "host"
+        },
+        "prev_hash": "55793a75d8753316517d5ee03d6e0a983a9104a309d0a66ca4ffdec991adc164",
+        "critical": true,
+        "data": {
+          "attempt": 1,
+          "request_ref": {
+            "sha256": "e7c24d5030c8daae4df7fe3bc503b5c01507186cb047af6dab14b3c1f305bd47",
+            "bytes": 847,
+            "media_type": "application/x-ndjson"
+          },
+          "declared_prefix": {
+            "bytes": 386,
+            "sha256": "862106e35a5b98c8953a59e6e4e8e547992d3931eb45cc87eb7aadf1ad3af715"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "event_id": "0192e000-0000-7000-8000-00000000000d",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "model_response",
+        "type_version": 1,
+        "time": 1790000013000,
+        "actor": {
+          "kind": "model"
+        },
+        "prev_hash": "7e9d10a3efae7b118d5e287ca10e97d4920d3ad7b83f09590fccb1ceb2561b6a",
+        "critical": true,
+        "data": {
+          "request_event_id": "0192e000-0000-7000-8000-00000000000c",
+          "content": [
+            {
+              "type": "text",
+              "text": "Done."
+            }
+          ],
+          "stop_reason": "end_turn",
+          "usage": {
+            "input_tokens": 3,
+            "output_tokens": 2
+          },
+          "completeness": "complete"
+        }
+      },
+      {
+        "seq": 14,
+        "event_id": "0192e000-0000-7000-8000-00000000000e",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "turn_completed",
+        "type_version": 1,
+        "time": 1790000014000,
+        "actor": {
+          "kind": "host"
+        },
+        "prev_hash": "5fadbe802cd9b024e3886d13d0c055aaa0d9da991ae099bcb0e667c0c71a4035",
+        "critical": true,
+        "data": {
+          "reason": "end_turn"
+        }
+      },
+      {
+        "seq": 15,
+        "event_id": "0192e000-0000-7000-8000-00000000000f",
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "epoch": 1,
+        "type": "user_input",
+        "type_version": 1,
+        "time": 1790000015000,
+        "actor": {
+          "kind": "user",
+          "principal": {
+            "issuer": "api",
+            "tenant": "acme",
+            "subject": "alice"
+          }
+        },
+        "prev_hash": "26e64d05b138c326c6025a218cc9baebf7e432c23db1b1b657899658394c575b",
+        "critical": true,
+        "data": {
+          "source": "api",
+          "text": "Unfinished input"
+        }
+      }
+    ],
+    "log": "{\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"created_at\":1790000000000,\"format\":\"threads.log\",\"format_version\":1,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"writer\":{\"impl\":\"threads-py\",\"version\":\"0.1.0\"}}\n{\"actor\":{\"kind\":\"host\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"adapter\":{\"name\":\"scripted\",\"settings\":{},\"version\":\"1\"},\"agent_name\":\"demo\",\"config_hash\":\"814c911bc321885f70661e014433a43dcd84b808d210d3f10c9e8e3b4489f598\",\"instructions\":\"You are a helpful agent.\",\"model\":{\"name\":\"scripted-1\",\"provider\":\"scripted\"},\"model_params\":{\"max_tokens\":1024},\"sandbox_provider\":\"fake\",\"tools\":[{\"description\":\"Read a file from the sandbox workspace.\",\"effect_class\":\"read_only\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"path\":{\"type\":\"string\"}},\"required\":[\"path\"],\"type\":\"object\"},\"name\":\"read_file\"}]},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-000000000001\",\"prev_hash\":\"a4c28bbb8c786e6cb5caaf2b52d16d7b33607e2cf98edef076a94346089bd1b7\",\"seq\":1,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000001000,\"type\":\"thread_started\",\"type_version\":1}\n{\"actor\":{\"kind\":\"user\",\"principal\":{\"issuer\":\"api\",\"subject\":\"alice\",\"tenant\":\"acme\"}},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"source\":\"api\",\"text\":\"What is in README.md?\"},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-000000000002\",\"prev_hash\":\"9583e7bd01bde8855bbe3ed12fe6cfe8a7de76007ac64e9a031f8c60ec0eb55d\",\"seq\":2,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000002000,\"type\":\"user_input\",\"type_version\":1}\n{\"actor\":{\"kind\":\"host\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"attempt\":1,\"declared_prefix\":{\"bytes\":386,\"sha256\":\"862106e35a5b98c8953a59e6e4e8e547992d3931eb45cc87eb7aadf1ad3af715\"},\"request_ref\":{\"bytes\":461,\"media_type\":\"application/x-ndjson\",\"sha256\":\"e0920bbc2776d4bc887421295ea6ddbf1173b45d58259e4d2fb44d1dd44b4bb3\"}},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-000000000003\",\"prev_hash\":\"583e585b857348d5ea93864a7d8bd2a4151ef03e732abb984599e59c2325755b\",\"seq\":3,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000003000,\"type\":\"model_request\",\"type_version\":1}\n{\"actor\":{\"kind\":\"model\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"completeness\":\"complete\",\"content\":[{\"call_id\":\"call_1\",\"input\":{\"path\":\"README.md\"},\"name\":\"read_file\",\"type\":\"tool_use\"}],\"request_event_id\":\"0192e000-0000-7000-8000-000000000003\",\"stop_reason\":\"tool_use\",\"usage\":{\"input_tokens\":120,\"output_tokens\":18}},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-000000000004\",\"prev_hash\":\"e46dc236a17e2d038b97e7f25afdd8de177362d080c7bfc25e137144a74b926f\",\"seq\":4,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000004000,\"type\":\"model_response\",\"type_version\":1}\n{\"actor\":{\"kind\":\"host\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"call_id\":\"call_1\",\"input\":{\"path\":\"README.md\"},\"name\":\"read_file\",\"request_event_id\":\"0192e000-0000-7000-8000-000000000003\"},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-000000000005\",\"prev_hash\":\"574417ac00977fc926e968809e9c8b0798c65b82df0de5f285a7d046491e5e11\",\"seq\":5,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000005000,\"type\":\"tool_call\",\"type_version\":1}\n{\"actor\":{\"kind\":\"host\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"call_id\":\"call_1\",\"decision\":\"allow\",\"rule_id\":\"conformance_allow\",\"source\":\"policy\"},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-000000000006\",\"prev_hash\":\"85b3f4e28b6a3fec1e281e26023f4ffc3a1c1502e98ef36b120d607e157927d8\",\"seq\":6,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000006000,\"type\":\"permission_decision\",\"type_version\":1}\n{\"actor\":{\"kind\":\"tool\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"call_id\":\"call_1\",\"completeness\":\"complete\",\"is_error\":false,\"origin\":\"executed\",\"preview\":\"# demo\\n\"},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-000000000007\",\"prev_hash\":\"1385da1f30b2df1993bbaf3bc4a05f6e766f23669746d02a51661c00b05645f9\",\"seq\":7,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000007000,\"type\":\"tool_result\",\"type_version\":1}\n{\"actor\":{\"kind\":\"host\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"attempt\":1,\"declared_prefix\":{\"bytes\":386,\"sha256\":\"862106e35a5b98c8953a59e6e4e8e547992d3931eb45cc87eb7aadf1ad3af715\"},\"request_ref\":{\"bytes\":679,\"media_type\":\"application/x-ndjson\",\"sha256\":\"31da1b009d3f58aab2e77a24ffa450d3d36df99115adf63db80a8d0df33d832f\"}},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-000000000008\",\"prev_hash\":\"efcbdc565295d65bc1017edf56f11d73b0a82b101eca29be6bcd05d1cabdba57\",\"seq\":8,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000008000,\"type\":\"model_request\",\"type_version\":1}\n{\"actor\":{\"kind\":\"model\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"completeness\":\"complete\",\"content\":[{\"text\":\"README.md contains one heading: demo.\",\"type\":\"text\"}],\"request_event_id\":\"0192e000-0000-7000-8000-000000000008\",\"stop_reason\":\"end_turn\",\"usage\":{\"input_tokens\":160,\"output_tokens\":12}},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-000000000009\",\"prev_hash\":\"412c7457561a627e0aab7985291ef3b3fe79338aa6c60f5e000f36bf0532fca6\",\"seq\":9,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000009000,\"type\":\"model_response\",\"type_version\":1}\n{\"actor\":{\"kind\":\"host\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"reason\":\"end_turn\"},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-00000000000a\",\"prev_hash\":\"75181a26c944bba07de37e139dba90428c05c11871ef35516915e4ce031b47a2\",\"seq\":10,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000010000,\"type\":\"turn_completed\",\"type_version\":1}\n{\"actor\":{\"kind\":\"user\",\"principal\":{\"issuer\":\"api\",\"subject\":\"alice\",\"tenant\":\"acme\"}},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"source\":\"api\",\"text\":\"Unicode café 🌍\"},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-00000000000b\",\"prev_hash\":\"10af3332fb0e2765bfce66a53f2e569a020534971c05a7cb98242b087dd9b4c7\",\"seq\":11,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000011000,\"type\":\"user_input\",\"type_version\":1}\n{\"actor\":{\"kind\":\"host\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"attempt\":1,\"declared_prefix\":{\"bytes\":386,\"sha256\":\"862106e35a5b98c8953a59e6e4e8e547992d3931eb45cc87eb7aadf1ad3af715\"},\"request_ref\":{\"bytes\":847,\"media_type\":\"application/x-ndjson\",\"sha256\":\"e7c24d5030c8daae4df7fe3bc503b5c01507186cb047af6dab14b3c1f305bd47\"}},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-00000000000c\",\"prev_hash\":\"55793a75d8753316517d5ee03d6e0a983a9104a309d0a66ca4ffdec991adc164\",\"seq\":12,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000012000,\"type\":\"model_request\",\"type_version\":1}\n{\"actor\":{\"kind\":\"model\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"completeness\":\"complete\",\"content\":[{\"text\":\"Done.\",\"type\":\"text\"}],\"request_event_id\":\"0192e000-0000-7000-8000-00000000000c\",\"stop_reason\":\"end_turn\",\"usage\":{\"input_tokens\":3,\"output_tokens\":2}},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-00000000000d\",\"prev_hash\":\"7e9d10a3efae7b118d5e287ca10e97d4920d3ad7b83f09590fccb1ceb2561b6a\",\"seq\":13,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000013000,\"type\":\"model_response\",\"type_version\":1}\n{\"actor\":{\"kind\":\"host\"},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"reason\":\"end_turn\"},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-00000000000e\",\"prev_hash\":\"5fadbe802cd9b024e3886d13d0c055aaa0d9da991ae099bcb0e667c0c71a4035\",\"seq\":14,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000014000,\"type\":\"turn_completed\",\"type_version\":1}\n{\"actor\":{\"kind\":\"user\",\"principal\":{\"issuer\":\"api\",\"subject\":\"alice\",\"tenant\":\"acme\"}},\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"critical\":true,\"data\":{\"source\":\"api\",\"text\":\"Unfinished input\"},\"epoch\":1,\"event_id\":\"0192e000-0000-7000-8000-00000000000f\",\"prev_hash\":\"26e64d05b138c326c6025a218cc9baebf7e432c23db1b1b657899658394c575b\",\"seq\":15,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"time\":1790000015000,\"type\":\"user_input\",\"type_version\":1}\n{\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"format\":\"threads.head\",\"format_version\":1,\"hash\":\"2a6476865ac59547e0c07972cf13c84c591360ae412df10cb1c888900dd24b4b\",\"seq\":15}\n",
+    "expected": [
+      {
+        "format_version": 1,
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "turn_id": "0192e000-0000-7000-8000-000000000002",
+        "started_at": 1790000002000,
+        "completed_at": 1790000010000,
+        "completion": {
+          "reason": "end_turn"
+        },
+        "messages": [
+          {
+            "role": "user",
+            "event_id": "0192e000-0000-7000-8000-000000000002",
+            "seq": 2,
+            "content": [
+              {
+                "type": "text",
+                "text": "What is in README.md?"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "event_id": "0192e000-0000-7000-8000-000000000004",
+            "seq": 4,
+            "content": [
+              {
+                "type": "tool_use",
+                "call_id": "call_1",
+                "name": "read_file",
+                "input": {
+                  "path": "README.md"
+                }
+              }
+            ],
+            "completeness": "complete",
+            "stop_reason": "tool_use"
+          },
+          {
+            "role": "assistant",
+            "event_id": "0192e000-0000-7000-8000-000000000009",
+            "seq": 9,
+            "content": [
+              {
+                "type": "text",
+                "text": "README.md contains one heading: demo."
+              }
+            ],
+            "completeness": "complete",
+            "stop_reason": "end_turn"
+          }
+        ],
+        "tool_calls": [
+          {
+            "event_id": "0192e000-0000-7000-8000-000000000005",
+            "seq": 5,
+            "data": {
+              "call_id": "call_1",
+              "name": "read_file",
+              "input": {
+                "path": "README.md"
+              },
+              "request_event_id": "0192e000-0000-7000-8000-000000000003"
+            }
+          }
+        ],
+        "tool_results": [
+          {
+            "event_id": "0192e000-0000-7000-8000-000000000007",
+            "seq": 7,
+            "type": "tool_result",
+            "data": {
+              "call_id": "call_1",
+              "is_error": false,
+              "completeness": "complete",
+              "preview": "# demo\n",
+              "origin": "executed"
+            }
+          }
+        ]
+      },
+      {
+        "format_version": 1,
+        "thread_id": "0192a000-0000-7000-8000-000000000001",
+        "branch_id": "0192b000-0000-7000-8000-000000000001",
+        "turn_id": "0192e000-0000-7000-8000-00000000000b",
+        "started_at": 1790000011000,
+        "completed_at": 1790000014000,
+        "completion": {
+          "reason": "end_turn"
+        },
+        "messages": [
+          {
+            "role": "user",
+            "event_id": "0192e000-0000-7000-8000-00000000000b",
+            "seq": 11,
+            "content": [
+              {
+                "type": "text",
+                "text": "Unicode café 🌍"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "event_id": "0192e000-0000-7000-8000-00000000000d",
+            "seq": 13,
+            "content": [
+              {
+                "type": "text",
+                "text": "Done."
+              }
+            ],
+            "completeness": "complete",
+            "stop_reason": "end_turn"
+          }
+        ],
+        "tool_calls": [],
+        "tool_results": []
+      }
+    ],
+    "jsonl": "{\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"completed_at\":1790000010000,\"completion\":{\"reason\":\"end_turn\"},\"format_version\":1,\"messages\":[{\"content\":[{\"text\":\"What is in README.md?\",\"type\":\"text\"}],\"event_id\":\"0192e000-0000-7000-8000-000000000002\",\"role\":\"user\",\"seq\":2},{\"completeness\":\"complete\",\"content\":[{\"call_id\":\"call_1\",\"input\":{\"path\":\"README.md\"},\"name\":\"read_file\",\"type\":\"tool_use\"}],\"event_id\":\"0192e000-0000-7000-8000-000000000004\",\"role\":\"assistant\",\"seq\":4,\"stop_reason\":\"tool_use\"},{\"completeness\":\"complete\",\"content\":[{\"text\":\"README.md contains one heading: demo.\",\"type\":\"text\"}],\"event_id\":\"0192e000-0000-7000-8000-000000000009\",\"role\":\"assistant\",\"seq\":9,\"stop_reason\":\"end_turn\"}],\"started_at\":1790000002000,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"tool_calls\":[{\"data\":{\"call_id\":\"call_1\",\"input\":{\"path\":\"README.md\"},\"name\":\"read_file\",\"request_event_id\":\"0192e000-0000-7000-8000-000000000003\"},\"event_id\":\"0192e000-0000-7000-8000-000000000005\",\"seq\":5}],\"tool_results\":[{\"data\":{\"call_id\":\"call_1\",\"completeness\":\"complete\",\"is_error\":false,\"origin\":\"executed\",\"preview\":\"# demo\\n\"},\"event_id\":\"0192e000-0000-7000-8000-000000000007\",\"seq\":7,\"type\":\"tool_result\"}],\"turn_id\":\"0192e000-0000-7000-8000-000000000002\"}\n{\"branch_id\":\"0192b000-0000-7000-8000-000000000001\",\"completed_at\":1790000014000,\"completion\":{\"reason\":\"end_turn\"},\"format_version\":1,\"messages\":[{\"content\":[{\"text\":\"Unicode café 🌍\",\"type\":\"text\"}],\"event_id\":\"0192e000-0000-7000-8000-00000000000b\",\"role\":\"user\",\"seq\":11},{\"completeness\":\"complete\",\"content\":[{\"text\":\"Done.\",\"type\":\"text\"}],\"event_id\":\"0192e000-0000-7000-8000-00000000000d\",\"role\":\"assistant\",\"seq\":13,\"stop_reason\":\"end_turn\"}],\"started_at\":1790000011000,\"thread_id\":\"0192a000-0000-7000-8000-000000000001\",\"tool_calls\":[],\"tool_results\":[],\"turn_id\":\"0192e000-0000-7000-8000-00000000000b\"}\n"
+  }
+]

@@ -140,7 +140,10 @@ from threadsai.thread.importing import import_thread  # noqa: E402
 from threadsai.web.search import SearchBackend, SearchHit  # noqa: E402
 from threadsai.workspace import Workspace, WorkspaceGit  # noqa: E402
 
+from threadsai.trajectories import export_trajectories
+
 __all__ = [
+    "export_trajectories",
     "VERSION",
     "Agent",
     "AskOutcome",

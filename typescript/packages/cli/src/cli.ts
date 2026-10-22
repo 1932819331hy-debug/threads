@@ -14,6 +14,7 @@ import {
   tenantStore,
 } from "threadsai/host";
 import { type EvalArgs, evals } from "./eval";
+import { type TrajectoryArgs, trajectories } from "./trajectories";
 
 // The `threadsai` CLI (spec/api.json cli): thin wrappers over library calls, never a feature of its
 // own. Every command answers an exit code; output goes through `io`.
@@ -30,6 +31,7 @@ const USAGE = `usage: threadsai <command> [options]
   timeline <thread_id> [--branch B] print a branch's steps as JSON lines
   export <branch_id> [--bundle D]   write a branch's JSONL export to stdout, or a portable
                                     bundle (log.jsonl, artifacts/, bundle.json) to D
+  export --jsonl [--thread UUID]... [--since MS]  write completed-turn training JSONL
   import <dir|file>                 verify and store a bundle or a bare JSONL export
   repair <branch_id>                record log_repaired on an imported torn branch
   delete <thread_id> | --tenant T   delete a thread, or every thread of a tenant
@@ -44,6 +46,9 @@ const OPTIONS = {
   tenant: { type: "string" },
   branch: { type: "string" },
   bundle: { type: "string" },
+  jsonl: { type: "boolean", default: false },
+  thread: { type: "string", multiple: true },
+  since: { type: "string" },
   port: { type: "string", default: "8787" },
   "grace-days": { type: "string", default: "7" },
   agent: { type: "string" },
@@ -64,6 +69,7 @@ type Parsed = {
   readonly port: number;
   readonly graceDays: number;
   readonly eval: EvalArgs;
+  readonly trajectory: TrajectoryArgs;
 };
 
 function parse(argv: readonly string[]): Parsed {
@@ -76,6 +82,7 @@ function parse(argv: readonly string[]): Parsed {
   return {
     command,
     args,
+    trajectory: { jsonl: values.jsonl, threads: values.thread, since: values.since },
     store: values.store ?? ".threads",
     tenant: values.tenant,
     bundle: values.bundle,
@@ -113,6 +120,8 @@ export async function run(
     io.err(`${String(error)}\n${USAGE}`);
     return 2;
   }
+  if (p.command !== "export" && (p.trajectory.jsonl || p.trajectory.threads !== undefined || p.trajectory.since !== undefined))
+    return usage(io, "trajectory options require export --jsonl");
   switch (p.command) {
     case "dev":
     case "start":
@@ -241,6 +250,12 @@ async function timeline(p: Parsed, io: Io): Promise<number> {
 }
 
 async function exportBranch(p: Parsed, io: Io): Promise<number> {
+  if (p.trajectory.jsonl) {
+    if (p.args.length > 0 || p.bundle !== undefined) return usage(io, "--jsonl excludes branch_id and --bundle");
+    return trajectories(p.trajectory, async () => tenantStore(await storeAt(p.store), p.tenant ?? "local"), io);
+  }
+  if (p.trajectory.threads !== undefined || p.trajectory.since !== undefined)
+    return usage(io, "--thread and --since require --jsonl");
   const id = BranchId.safeParse(p.args[0]);
   if (!id.success) return usage(io, "export <branch_id> [--bundle <dir>]");
   if (p.bundle !== undefined) return await exportBundleTo(p, io, id.data);

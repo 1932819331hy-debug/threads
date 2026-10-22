@@ -47,6 +47,7 @@ say so.
 
 | TypeScript | Python | What it does |
 |---|---|---|
+| [`exportTrajectories`](/docs/reference/functions/exportTrajectories) | `export_trajectories` | Returns canonical UTF-8 JSONL: one record per completed user turn. |
 | [`agent`](/docs/reference/functions/agent) | `agent` | Describe an agent. |
 | [`codingAgent`](/docs/reference/functions/codingAgent) | `coding_agent` | A coding agent in one call: agent() with Claude Sonnet 5, a keyless Docker sandbox (2 CPUs, 4 GiB, no network), the sandbox tools under permissions &#123;mode: "accept_edits", allow: ["bash(*)"]&#125;, localMemory() and CODING_INSTRUCTIONS. |
 | [`dynamicAgent`](/docs/reference/functions/dynamicAgent) | `dynamic_agent` | Describe a dynamic agent: a template in a lead's team whose members the lead (or team.start) defines at runtime within what this code pins. |

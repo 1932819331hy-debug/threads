@@ -124,3 +124,55 @@ Runs every saved case under `--cases` (default `cases`). Without `--agent` it lo
 ## Exit codes
 
 `0` on success, `1` when the command failed (the error code and message go to stderr, for example `not_found: ...`), `2` for a usage error.
+
+## Training data: `export --jsonl`
+
+```bash
+threadsai --store .threads --tenant local export --jsonl > turns.jsonl
+threadsai --store .threads export --jsonl --thread 0192a000-0000-7000-8000-000000000001 --since 1790000000000
+```
+
+This exports one completed user turn per line. It also works through
+`exportTrajectories(store, { threads, since })` in TypeScript and
+`await export_trajectories(store, threads=..., since=...)` in Python. Both return
+an expected-failure Result containing identical UTF-8 bytes for the same log.
+Omit `threads` for all tenant threads; an empty list selects none. `since` includes
+completions at or after that Unix millisecond timestamp. Repeat `--thread` to
+select several threads. Python's global `--store` and `--tenant` go before `export`.
+
+### Line format
+
+Every line is canonical JSON followed by LF, with these keys:
+
+- `format_version`: `1`
+- `thread_id`, `branch_id`, `turn_id`: thread, completion branch and opening user input event
+- `started_at`, `completed_at`: timestamps in Unix milliseconds
+- `completion`: logged turn completion reason and optional error code
+- `messages`: ordered `user` and `assistant` content-part arrays, with `event_id` and `seq`;
+  assistant messages also include `completeness` and `stop_reason`
+- `tool_calls`: `event_id`, `seq`, and `data` with the admitted call's `call_id`, `name`,
+  `input` and `request_event_id`
+- `tool_results`: `event_id`, `seq`, `type` (`tool_result` or `tool_result_late`) and
+  original `data`, including previews, inline content or artifact references
+
+Use `seq` to merge the three arrays into execution order and `call_id` to join
+calls to results. Model `tool_use` parts are proposals; `tool_calls` records admitted
+calls. This is a provider-neutral format: adapt it to your fine-tuning or RL
+consumer's schema before upload. It does not include full system/prior-turn
+context or dereference artifacts. For portable artifact bytes, use the existing
+`export <branch_id> --bundle DIR`.
+
+All completion reasons are retained, including errors. An incomplete tail is
+omitted; earlier completed turns remain exportable. Compaction model responses
+are excluded. Forks do not duplicate ancestor completions. Records are ordered by
+thread id, branch id, then completion sequence, independent of clocks. Missing or
+foreign thread IDs return the same `not_found` error. Corrupt or unverified logs
+fail the whole export without partial output.
+
+The exporter never resolves `secret()` or reads credentials. Stored logs already
+exclude resolved secrets; a registered secret encountered in output is refused.
+As with any training dataset, review ordinary user/tool content before sharing it.
+
+The complete schema is `spec/schema/trajectory.v1.schema.json` and byte semantics
+are in `spec/trajectories.md`. Runnable local-store examples are
+`typescript/examples/export-trajectories.ts` and `python/examples/export_trajectories.py`.
