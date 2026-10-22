@@ -1,6 +1,7 @@
 """Reference trajectory rows for existing wake, mail and incomplete-turn logs."""
-from pathlib import Path
+
 import json
+from pathlib import Path
 
 from .common import arr, obj, text
 from .jcs import JsonValue, Obj, canonical
@@ -68,12 +69,25 @@ def _row(events: list[Obj], start: int, end: int, ins: dict[int, bool]) -> Obj:
         data, kind = obj(event["data"]), event["type"]
         identity: Obj = {"event_id": event["event_id"], "seq": event["seq"]}
         if kind in ("user_input", "steer"):
-            messages.append({**identity, "role": "user", "content": data.get(
-                "content", [{"type": "text", "text": data.get("text", "")}]
-            )})
+            messages.append(
+                {
+                    **identity,
+                    "role": "user",
+                    "content": data.get(
+                        "content", [{"type": "text", "text": data.get("text", "")}]
+                    ),
+                }
+            )
         elif kind in ("model_response", "model_response_recovered"):
-            messages.append({**identity, "role": "assistant", "content": data["content"],
-                             "completeness": data["completeness"], "stop_reason": data["stop_reason"]})
+            messages.append(
+                {
+                    **identity,
+                    "role": "assistant",
+                    "content": data["content"],
+                    "completeness": data["completeness"],
+                    "stop_reason": data["stop_reason"],
+                }
+            )
         elif kind == "message_received" and i in ins:
             messages.append({**identity, "role": "mail", "data": data})
         elif kind == "tool_call":
@@ -81,12 +95,17 @@ def _row(events: list[Obj], start: int, end: int, ins: dict[int, bool]) -> Obj:
         elif kind in ("tool_result", "tool_result_late"):
             results.append({**identity, "type": kind, "data": data})
     return {
-        "format_version": 1, "thread_id": completion["thread_id"],
-        "branch_id": completion["branch_id"], "turn_id": opening["event_id"],
+        "format_version": 1,
+        "thread_id": completion["thread_id"],
+        "branch_id": completion["branch_id"],
+        "turn_id": opening["event_id"],
         "trigger": {"type": opening["type"], "data": opening["data"]},
-        "started_at": opening["time"], "completed_at": completion["time"],
-        "completion": completion["data"], "messages": messages,
-        "tool_calls": calls, "tool_results": results,
+        "started_at": opening["time"],
+        "completed_at": completion["time"],
+        "completion": completion["data"],
+        "messages": messages,
+        "tool_calls": calls,
+        "tool_results": results,
     }
 
 
@@ -94,7 +113,9 @@ def rows(root: Path) -> list[JsonValue]:
     out: list[JsonValue] = []
     for path, count in CASES.items():
         raw = (root / path).read_text()
-        events = [obj(json.loads(line)) for line in raw.splitlines() if "type" in obj(json.loads(line))]
+        events = [
+            obj(json.loads(line)) for line in raw.splitlines() if "type" in obj(json.loads(line))
+        ]
         ins = inputs(events)
         expected: list[JsonValue] = []
         start: int | None = None
@@ -102,13 +123,21 @@ def rows(root: Path) -> list[JsonValue]:
             if ins.get(i):
                 start = i
             if event["type"] == "turn_completed":
-                assert start is not None, path
+                if start is None:
+                    raise ValueError(f"{path}: completed turn has no opening event")
                 expected.append(_row(events, start, i, ins))
                 start = None
-        assert len(expected) == count, (path, len(expected), count)
-        out.append({
-            "name": path, "branch_id": text(events[-1]["branch_id"]),
-            "events": events, "log": raw, "inputs": [[i, opens] for i, opens in ins.items()],
-            "expected": expected, "jsonl": b"".join(canonical(row) + b"\n" for row in expected).decode(),
-        })
+        if len(expected) != count:
+            raise ValueError(f"{path}: expected {count} turns, got {len(expected)}")
+        out.append(
+            {
+                "name": path,
+                "branch_id": text(events[-1]["branch_id"]),
+                "events": events,
+                "log": raw,
+                "inputs": [[i, opens] for i, opens in ins.items()],
+                "expected": expected,
+                "jsonl": b"".join(canonical(row) + b"\n" for row in expected).decode(),
+            }
+        )
     return out

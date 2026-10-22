@@ -7,7 +7,8 @@ from .jcs import JsonValue, canonical
 from .log import Log
 from .pieces import READ_FILE, dump, read_turn, started, user
 from .trajectory_contracts import rows as contract_rows
-from .trajectory_turns import inputs, rows as turn_rows
+from .trajectory_turns import inputs
+from .trajectory_turns import rows as turn_rows
 
 VECTOR = CASES.parent / "vectors" / "trajectories.json"
 CONTRACTS = CASES.parent / "vectors" / "trajectory-contracts.json"
@@ -33,13 +34,18 @@ def rows(cases: Path = CASES) -> list[JsonValue]:
         "completion": end["data"],
         "messages": [
             {
-                "role": "user", "event_id": u["event_id"], "seq": u["seq"],
+                "role": "user",
+                "event_id": u["event_id"],
+                "seq": u["seq"],
                 "content": [{"type": "text", "text": "Unicode café 🌍"}],
             },
             {
-                "role": "assistant", "event_id": response["event_id"], "seq": response["seq"],
+                "role": "assistant",
+                "event_id": response["event_id"],
+                "seq": response["seq"],
                 "content": obj(response["data"])["content"],
-                "completeness": "complete", "stop_reason": "end_turn",
+                "completeness": "complete",
+                "stop_reason": "end_turn",
             },
         ],
         "tool_calls": [],
@@ -60,12 +66,16 @@ def rows(cases: Path = CASES) -> list[JsonValue]:
         "completion": completion["data"],
         "messages": [
             {
-                "role": "user", "event_id": opening["event_id"], "seq": opening["seq"],
+                "role": "user",
+                "event_id": opening["event_id"],
+                "seq": opening["seq"],
                 "content": [{"type": "text", "text": obj(opening["data"])["text"]}],
             },
             *[
                 {
-                    "role": "assistant", "event_id": e["event_id"], "seq": e["seq"],
+                    "role": "assistant",
+                    "event_id": e["event_id"],
+                    "seq": e["seq"],
                     "content": obj(e["data"])["content"],
                     "completeness": obj(e["data"])["completeness"],
                     "stop_reason": obj(e["data"])["stop_reason"],
@@ -78,19 +88,27 @@ def rows(cases: Path = CASES) -> list[JsonValue]:
         ],
         "tool_results": [
             {
-                "event_id": tool_result["event_id"], "seq": tool_result["seq"],
-                "type": tool_result["type"], "data": tool_result["data"],
+                "event_id": tool_result["event_id"],
+                "seq": tool_result["seq"],
+                "type": tool_result["type"],
+                "data": tool_result["data"],
             }
         ],
     }
     user(log, "Unfinished input")
     expected: list[JsonValue] = [first_row, second]
-    return [{
-        "name": "two-user-turns", "branch_id": BRANCH, "events": log.events, "log": log.export().decode(),
-        "inputs": [[i, opens] for i, opens in inputs(log.events).items()],
-        "expected": expected,
-        "jsonl": b"".join(canonical(row) + b"\n" for row in expected).decode(),
-    }, *turn_rows(cases)]
+    return [
+        {
+            "name": "two-user-turns",
+            "branch_id": BRANCH,
+            "events": log.events,
+            "log": log.export().decode(),
+            "inputs": [[i, opens] for i, opens in inputs(log.events).items()],
+            "expected": expected,
+            "jsonl": b"".join(canonical(row) + b"\n" for row in expected).decode(),
+        },
+        *turn_rows(cases),
+    ]
 
 
 def write(cases: Path = CASES) -> None:
@@ -103,6 +121,7 @@ def check(cases: Path = CASES) -> list[str]:
     values = rows(cases)
     expected = ((VECTOR, values), (CONTRACTS, contract_rows(values)))
     return [
-        f"{path.name} is stale" for path, records in expected
+        f"{path.name} is stale"
+        for path, records in expected
         if not path.exists() or path.read_text(encoding="utf-8") != dump(records)
     ]
