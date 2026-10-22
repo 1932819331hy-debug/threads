@@ -1,4 +1,5 @@
 """Completed-turn training export; the byte format is spec/trajectories.md."""
+
 from collections.abc import Sequence
 
 from pydantic import JsonValue, TypeAdapter, ValidationError

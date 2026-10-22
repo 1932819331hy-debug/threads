@@ -5,10 +5,8 @@ import json
 import sys
 from collections.abc import Sequence
 
-from threadsai.agents.config import ConfigError
-from threadsai.trajectories import export_trajectories
-
 from threadsai.adapters.loop_resources import holding
+from threadsai.agents.config import ConfigError
 from threadsai.agents.store import Store, now_ms, open_store, scoped, sqlite
 from threadsai.cli.serve import load
 from threadsai.log import BranchId, ThreadId
@@ -21,6 +19,7 @@ from threadsai.store.lines import uuid7
 from threadsai.store.sql import text_of
 from threadsai.thread.handle import open_thread
 from threadsai.thread.importing import import_thread
+from threadsai.trajectories import export_trajectories
 
 
 def store_at(path: str) -> Store:
@@ -153,11 +152,16 @@ async def gc(path: str, module: str | None, grace_days: float) -> int:
     return 0
 
 
-async def trajectories(path: str, tenant: str, threads: Sequence[str] | None, since: int | None) -> int:
+async def trajectories(
+    path: str, tenant: str, threads: Sequence[str] | None, since: int | None
+) -> int:
     """Training JSONL uses its own API; raw branch/bundle exports keep their format."""
     try:
-        result = await export_trajectories(_store(path, tenant),
-            threads=None if threads is None else tuple(ThreadId(t) for t in threads), since=since)
+        result = await export_trajectories(
+            _store(path, tenant),
+            threads=None if threads is None else tuple(ThreadId(t) for t in threads),
+            since=since,
+        )
     except ConfigError as error:
         print(f"{error.code}: {error}", file=sys.stderr)
         return 2

@@ -1,4 +1,5 @@
 """Drive fully mocked async trajectory operations without even a loop's socketpair."""
+
 from collections.abc import Coroutine
 
 

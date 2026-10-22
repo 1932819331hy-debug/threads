@@ -137,13 +137,11 @@ from threadsai.thread.case import CaseExpectation, SavedCase  # noqa: E402
 from threadsai.thread.case_simulate import Simulate  # noqa: E402
 from threadsai.thread.handle import open_thread  # noqa: E402
 from threadsai.thread.importing import import_thread  # noqa: E402
+from threadsai.trajectories import export_trajectories  # noqa: E402
 from threadsai.web.search import SearchBackend, SearchHit  # noqa: E402
 from threadsai.workspace import Workspace, WorkspaceGit  # noqa: E402
 
-from threadsai.trajectories import export_trajectories
-
 __all__ = [
-    "export_trajectories",
     "VERSION",
     "Agent",
     "AskOutcome",
@@ -262,6 +260,7 @@ __all__ = [
     "__version__",
     "agent",
     "dynamic_agent",
+    "export_trajectories",
     "extension",
     "fake_sandbox",
     "import_thread",

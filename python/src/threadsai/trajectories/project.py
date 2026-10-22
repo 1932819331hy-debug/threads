@@ -1,4 +1,5 @@
 """The pure turn projection of already-validated log events (spec/trajectories.md)."""
+
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 
@@ -29,10 +30,15 @@ class _Turn:
             self.messages.append({**identity, "role": "user", "content": content})
         elif kind in ("model_response", "model_response_recovered"):
             if data.get("request_event_id") not in compactions:
-                self.messages.append({
-                    **identity, "role": "assistant", "content": data["content"],
-                    "completeness": data["completeness"], "stop_reason": data["stop_reason"],
-                })
+                self.messages.append(
+                    {
+                        **identity,
+                        "role": "assistant",
+                        "content": data["content"],
+                        "completeness": data["completeness"],
+                        "stop_reason": data["stop_reason"],
+                    }
+                )
         elif kind == "message_received":
             self.messages.append({**identity, "role": "mail", "data": data})
         elif kind == "tool_call":
@@ -42,11 +48,17 @@ class _Turn:
 
     def finish(self, event: Mapping[str, JsonValue]) -> bytes:
         line: JsonValue = {
-            "format_version": 1, "thread_id": event["thread_id"], "branch_id": event["branch_id"],
+            "format_version": 1,
+            "thread_id": event["thread_id"],
+            "branch_id": event["branch_id"],
             "trigger": {"type": self.opening["type"], "data": self.opening["data"]},
-            "turn_id": self.opening["event_id"], "started_at": self.opening["time"],
-            "completed_at": event["time"], "completion": event["data"],
-            "messages": self.messages, "tool_calls": self.calls, "tool_results": self.results,
+            "turn_id": self.opening["event_id"],
+            "started_at": self.opening["time"],
+            "completed_at": event["time"],
+            "completion": event["data"],
+            "messages": self.messages,
+            "tool_calls": self.calls,
+            "tool_results": self.results,
         }
         encoded = canonicalize(line)
         if isinstance(encoded, Err):
@@ -60,7 +72,10 @@ class _History:
     late: dict[str, Mapping[str, JsonValue]] = field(default_factory=dict)
 
     def observe(self, event: Mapping[str, JsonValue]) -> None:
-        if event["type"] == "model_request" and _object(event["data"]).get("purpose") == "compaction":
+        if (
+            event["type"] == "model_request"
+            and _object(event["data"]).get("purpose") == "compaction"
+        ):
             self.compactions.add(_text(event["event_id"]))
         if event["type"] == "tool_result_late":
             self.late[_text(event["event_id"])] = event
@@ -79,7 +94,11 @@ class _History:
 
 
 def project(
-    events: Sequence[Mapping[str, JsonValue]], branch: str, inputs: Mapping[int, bool], *, since: int = 0
+    events: Sequence[Mapping[str, JsonValue]],
+    branch: str,
+    inputs: Mapping[int, bool],
+    *,
+    since: int = 0,
 ) -> bytes:
     """Keep closed turns whose completion belongs to this branch, in event order.
 

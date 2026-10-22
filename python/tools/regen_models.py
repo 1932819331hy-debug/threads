@@ -283,7 +283,10 @@ def main(argv: list[str]) -> int:
         work = Path(tmp)
         events = generate(work)
         builds = (
-            (TRAJECTORY_OUTPUT, lambda: generate_rooted(work, TRAJECTORY_SCHEMA, "Trajectory", TRAJECTORY_HEADER)),
+            (
+                TRAJECTORY_OUTPUT,
+                lambda: generate_rooted(work, TRAJECTORY_SCHEMA, "Trajectory", TRAJECTORY_HEADER),
+            ),
             (OUTPUT, lambda: events),
             (TOOLS_OUTPUT, lambda: generate_tools(work)),
             (HOST_OUTPUT, lambda: generate_host_api(work, events)),

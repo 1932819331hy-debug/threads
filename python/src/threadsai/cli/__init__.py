@@ -47,8 +47,12 @@ def _parser() -> argparse.ArgumentParser:
     written = commands.add_parser("export", help="export a branch")
     written.add_argument("branch_id", nargs="?")
     written.add_argument("--jsonl", action="store_true", help="write completed-turn training JSONL")
-    written.add_argument("--thread", action="append", dest="threads", help="select a thread (repeatable)")
-    written.add_argument("--since", type=int, help="inclusive completion time in epoch milliseconds")
+    written.add_argument(
+        "--thread", action="append", dest="threads", help="select a thread (repeatable)"
+    )
+    written.add_argument(
+        "--since", type=int, help="inclusive completion time in epoch milliseconds"
+    )
     written.add_argument("--bundle", help="write a portable bundle to this directory instead")
     commands.add_parser("import", help="import a bundle or an export").add_argument("file")
     commands.add_parser("repair", help="repair a torn import").add_argument("branch_id")
@@ -77,9 +81,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     command = str(args.command)
     if command == "export" and (
         (args.jsonl and (args.branch_id is not None or args.bundle is not None))
-        or (not args.jsonl and (args.branch_id is None or args.threads is not None or args.since is not None))
+        or (
+            not args.jsonl
+            and (args.branch_id is None or args.threads is not None or args.since is not None)
+        )
     ):
-        print("export needs branch_id [--bundle DIR] or --jsonl [--thread UUID] [--since MS]", file=sys.stderr)
+        print(
+            "export needs branch_id [--bundle DIR] or --jsonl [--thread UUID] [--since MS]",
+            file=sys.stderr,
+        )
         return 2
     if command in ("dev", "start"):
         return _serve(command, str(args.module), int(args.port))
@@ -100,8 +110,11 @@ def _command(command: str, args: argparse.Namespace) -> Coroutine[object, object
 
     commands: dict[str, Callable[[], Coroutine[object, object, int]]] = {
         "timeline": lambda: store.timeline(path, tenant, str(args.thread_id), optional("branch")),
-        "export": lambda: (store.trajectories(path, tenant, args.threads, args.since) if args.jsonl
-                           else store.export(path, tenant, str(args.branch_id), optional("bundle"))),
+        "export": lambda: (
+            store.trajectories(path, tenant, args.threads, args.since)
+            if args.jsonl
+            else store.export(path, tenant, str(args.branch_id), optional("bundle"))
+        ),
         "import": lambda: store.import_(path, tenant, str(args.file)),
         "repair": lambda: store.repair(path, tenant, str(args.branch_id)),
         "delete": lambda: store.delete(path, optional("all_of") or tenant, optional("thread_id")),
