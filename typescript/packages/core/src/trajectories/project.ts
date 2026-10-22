@@ -7,25 +7,50 @@ export class ProjectionError extends Error {}
 export function project(
   events: readonly JsonObject[],
   branch: string,
+  inputs: ReadonlyMap<number, boolean>,
   since = 0,
 ): Uint8Array {
   const lines: string[] = [];
-  const compactions = new Set<string>();
+  const history = new History();
   let turn: Turn | undefined;
-  for (const event of events) {
+  for (const [index, event] of events.entries()) {
     const kind = event["type"];
-    if (kind === "model_request" && object(event["data"])["purpose"] === "compaction")
-      compactions.add(text(event["event_id"]));
-    if (kind === "user_input") turn = new Turn(event);
+    history.observe(event);
+    if (inputs.get(index)) turn = history.start(event);
     if (turn === undefined) continue;
     if (kind === "turn_completed") {
       const time = event["time"];
       if (typeof time !== "number") throw new Error("a validated event has a time");
       if (event["branch_id"] === branch && time >= since) lines.push(turn.finish(event));
       turn = undefined;
-    } else turn.record(event, compactions);
+    } else if (kind !== "message_received" || inputs.has(index)) turn.record(event, history.compactions);
   }
   return new TextEncoder().encode(lines.join(""));
+}
+
+class History {
+  readonly compactions = new Set<string>();
+  readonly late = new Map<string, JsonObject>();
+
+  observe(event: JsonObject): void {
+    if (event["type"] === "model_request" && object(event["data"])["purpose"] === "compaction")
+      this.compactions.add(text(event["event_id"]));
+    if (event["type"] === "tool_result_late") this.late.set(text(event["event_id"]), event);
+  }
+
+  start(event: JsonObject): Turn {
+    const turn = new Turn(event);
+    if (event["type"] !== "woken") return turn;
+    const causes = object(event["data"])["causes"];
+    if (!Array.isArray(causes)) throw new Error("a validated wake has causes");
+    const results = [...new Set(causes.map(text))].map((id) => {
+      const result = this.late.get(id);
+      if (result === undefined) throw new Error("a verified wake has a preceding late result");
+      return result;
+    }).toSorted((a, b) => number(a["seq"]) - number(b["seq"]));
+    for (const result of results) turn.record(result, this.compactions);
+    return turn;
+  }
 }
 
 class Turn {
@@ -47,7 +72,8 @@ class Turn {
       if (!compactions.has(text(data["request_event_id"])))
         this.messages.push({ ...identity, role: "assistant", content: data["content"],
           completeness: data["completeness"], stop_reason: data["stop_reason"] });
-    } else if (kind === "tool_call") this.calls.push({ ...identity, data });
+    } else if (kind === "message_received") this.messages.push({ ...identity, role: "mail", data });
+    else if (kind === "tool_call") this.calls.push({ ...identity, data });
     else if (kind === "tool_result" || kind === "tool_result_late")
       this.results.push({ ...identity, type: kind, data });
   }
@@ -55,6 +81,7 @@ class Turn {
   finish(event: JsonObject): string {
     const line = canonicalize({
       format_version: 1, thread_id: event["thread_id"], branch_id: event["branch_id"],
+      trigger: { type: this.opening["type"], data: this.opening["data"] },
       turn_id: this.opening["event_id"], started_at: this.opening["time"],
       completed_at: event["time"], completion: event["data"],
       messages: this.messages, tool_calls: this.calls, tool_results: this.results,
@@ -72,5 +99,10 @@ function object(value: JsonObject[string] | undefined): JsonObject {
 
 function text(value: Json | undefined): string {
   if (typeof value !== "string") throw new Error("a validated event has an id");
+  return value;
+}
+
+function number(value: Json | undefined): number {
+  if (typeof value !== "number") throw new Error("a validated event has an integer sequence");
   return value;
 }

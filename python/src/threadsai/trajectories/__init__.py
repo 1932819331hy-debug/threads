@@ -7,9 +7,10 @@ from pydantic.experimental.missing_sentinel import MISSING
 from threadsai._generated.trajectory_v1 import TrajectoryBranch, TrajectoryOptions
 from threadsai.agents.config import ConfigError
 from threadsai.agents.store import Store, now_ms, open_store
-from threadsai.log import BranchId, ParseError, UnknownEvent
+from threadsai.log import BranchId, Event, ParseError, UnknownEvent
 from threadsai.redaction import contains_secret
 from threadsai.reduce.handlers import to_json
+from threadsai.reduce.openers import turn_inputs
 from threadsai.result import Err, Ok
 from threadsai.store import SqliteStore
 from threadsai.store.conn import Conn
@@ -64,13 +65,15 @@ async def _branch(
     if leaf.thread_id != row.thread_id or leaf.branch_id != row.branch_id:
         return Err(ParseError("log_corrupt", "trajectory index does not match verified log"))
     events: list[dict[str, JsonValue]] = []
+    known: list[Event] = []
     for segment in read.value.segments:
         for event, _ in segment.events:
             if isinstance(event, UnknownEvent):
                 continue
             events.append(_OBJECT.validate_python(to_json(event)))
+            known.append(event)
     try:
-        return Ok(project(events, row.branch_id, since=since))
+        return Ok(project(events, row.branch_id, turn_inputs(known), since=since))
     except ValueError:
         return Err(ParseError("invalid_line", "trajectory cannot be represented as canonical JSON"))
 

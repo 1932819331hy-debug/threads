@@ -33,6 +33,8 @@ class _Turn:
                     **identity, "role": "assistant", "content": data["content"],
                     "completeness": data["completeness"], "stop_reason": data["stop_reason"],
                 })
+        elif kind == "message_received":
+            self.messages.append({**identity, "role": "mail", "data": data})
         elif kind == "tool_call":
             self.calls.append({**identity, "data": data})
         elif kind in ("tool_result", "tool_result_late"):
@@ -41,6 +43,7 @@ class _Turn:
     def finish(self, event: Mapping[str, JsonValue]) -> bytes:
         line: JsonValue = {
             "format_version": 1, "thread_id": event["thread_id"], "branch_id": event["branch_id"],
+            "trigger": {"type": self.opening["type"], "data": self.opening["data"]},
             "turn_id": self.opening["event_id"], "started_at": self.opening["time"],
             "completed_at": event["time"], "completion": event["data"],
             "messages": self.messages, "tool_calls": self.calls, "tool_results": self.results,
@@ -51,7 +54,33 @@ class _Turn:
         return encoded.value.encode("utf-8") + b"\n"
 
 
-def project(events: Sequence[Mapping[str, JsonValue]], branch: str, *, since: int = 0) -> bytes:
+@dataclass(frozen=True, slots=True)
+class _History:
+    compactions: set[str] = field(default_factory=set)
+    late: dict[str, Mapping[str, JsonValue]] = field(default_factory=dict)
+
+    def observe(self, event: Mapping[str, JsonValue]) -> None:
+        if event["type"] == "model_request" and _object(event["data"]).get("purpose") == "compaction":
+            self.compactions.add(_text(event["event_id"]))
+        if event["type"] == "tool_result_late":
+            self.late[_text(event["event_id"])] = event
+
+    def start(self, event: Mapping[str, JsonValue]) -> _Turn:
+        turn = _Turn(event)
+        if event["type"] != "woken":
+            return turn
+        causes = _object(event["data"])["causes"]
+        if not isinstance(causes, list):
+            raise TypeError("a validated wake has causes")
+        results = [self.late[cause] for cause in {_text(cause) for cause in causes}]
+        for result in sorted(results, key=lambda item: _number(item["seq"])):
+            turn.record(result, self.compactions)
+        return turn
+
+
+def project(
+    events: Sequence[Mapping[str, JsonValue]], branch: str, inputs: Mapping[int, bool], *, since: int = 0
+) -> bytes:
     """Keep closed turns whose completion belongs to this branch, in event order.
 
     The public exporter passes only events read through the verified store boundary.
@@ -59,16 +88,12 @@ def project(events: Sequence[Mapping[str, JsonValue]], branch: str, *, since: in
     """
     out: list[bytes] = []
     turn: _Turn | None = None
-    compactions: set[str] = set()
-    for event in events:
+    history = _History()
+    for index, event in enumerate(events):
         kind = event["type"]
-        if kind == "model_request" and _object(event["data"]).get("purpose") == "compaction":
-            event_id = event["event_id"]
-            if not isinstance(event_id, str):
-                raise TypeError("a validated event has an event id")
-            compactions.add(event_id)
-        if kind == "user_input":
-            turn = _Turn(event)
+        history.observe(event)
+        if inputs.get(index):
+            turn = history.start(event)
         if turn is None:
             continue
         if kind == "turn_completed":
@@ -78,6 +103,18 @@ def project(events: Sequence[Mapping[str, JsonValue]], branch: str, *, since: in
             if event["branch_id"] == branch and time >= since:
                 out.append(turn.finish(event))
             turn = None
-        else:
-            turn.record(event, compactions)
+        elif kind != "message_received" or index in inputs:
+            turn.record(event, history.compactions)
     return b"".join(out)
+
+
+def _text(value: JsonValue) -> str:
+    if not isinstance(value, str):
+        raise TypeError("a validated event has an event id")
+    return value
+
+
+def _number(value: JsonValue) -> int:
+    if not isinstance(value, int):
+        raise TypeError("a validated event has an integer sequence")
+    return value

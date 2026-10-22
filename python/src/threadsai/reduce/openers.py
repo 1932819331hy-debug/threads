@@ -2,7 +2,7 @@
 that opened it (spec/schema/README.md, "Which events open a turn"), read from the events alone
 with the fold's own rules (team_fold.mail_renders)."""
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
 from threadsai.log import (
     AgentSpawnedEvent,
@@ -31,17 +31,25 @@ def _opens(event: Event, parks: Sequence[ParkAddress], settle: set[str]) -> bool
     return mail_renders(env, settle) and resolved
 
 
-def turn_start(events: Sequence[Event]) -> int | None:
-    """The index of the event that opened the open (or last) turn; None before any turn. A team
-    log opens none."""
+def turn_inputs(events: Sequence[Event]) -> Mapping[int, bool]:
+    """Input indexes: True opens a turn, False is renderable mail that does not open one.
+
+    Shares turn_start's park/settle rules; a team log has no model turns.
+    """
+    inputs: dict[int, bool] = {}
     if events and isinstance(events[0], TeamOpenedEvent):
-        return None
-    in_turn, start = False, None
+        return inputs
+    in_turn = False
     parks: list[ParkAddress] = []
     settle: set[str] = set()
     for i, event in enumerate(events):
-        if not in_turn and _opens(event, parks, settle):
-            in_turn, start = True, i
+        opening = not in_turn and _opens(event, parks, settle)
+        if opening:
+            in_turn = True
+        if opening or (
+            isinstance(event, MessageReceivedEvent) and mail_renders(event.data.envelope, settle)
+        ):
+            inputs[i] = opening
         if isinstance(event, TurnCompletedEvent):
             in_turn = False
         elif isinstance(event, ParkedEvent):
@@ -50,6 +58,15 @@ def turn_start(events: Sequence[Event]) -> int | None:
             parks.remove(event.data.address)
         elif isinstance(event, WaitStartedEvent):
             settle.update(monitor_id(event, m.name) for m in event.data.members)
+    return inputs
+
+
+def turn_start(events: Sequence[Event]) -> int | None:
+    """The index that opened the current or last turn; None before any turn."""
+    start = None
+    for index, opening in turn_inputs(events).items():
+        if opening:
+            start = index
     return start
 
 

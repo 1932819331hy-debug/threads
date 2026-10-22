@@ -22,6 +22,11 @@
       ],
       "type": "object"
     },
+    "AskId": {
+      "description": "The MailId of the ask.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9_.-]{1,128}$",
+      "type": "string"
+    },
     "AudioPart": {
       "additionalProperties": false,
       "description": "Recorded (non-realtime) audio, e.g. a channel voice note. Only adapters that declare audio input accept it; others fail pre-dispatch with content_unsupported. Realtime sessions are out of scope.",
@@ -70,10 +75,83 @@
     "BranchId": {
       "$ref": "#/$defs/Uuid"
     },
+    "Budget": {
+      "additionalProperties": false,
+      "description": "Limits checked before every model_request. Unknown usage counts at its conservative upper bound.",
+      "minProperties": 1,
+      "properties": {
+        "max_cost_nanos": {
+          "$ref": "#/$defs/PosInt"
+        },
+        "max_input_tokens": {
+          "$ref": "#/$defs/PosInt"
+        },
+        "max_model_requests": {
+          "$ref": "#/$defs/PosInt"
+        },
+        "max_output_tokens": {
+          "$ref": "#/$defs/PosInt"
+        },
+        "max_turns": {
+          "$ref": "#/$defs/PosInt"
+        },
+        "max_wall_ms": {
+          "$ref": "#/$defs/PosInt"
+        }
+      },
+      "type": "object"
+    },
     "CallId": {
       "description": "Tool call id; may be provider-issued. The effect key is derived: <branch_id of the tool_call event>:<call_id>.",
       "pattern": "^[A-Za-z0-9_.-]{1,128}$",
       "type": "string"
+    },
+    "CallerAddress": {
+      "additionalProperties": false,
+      "description": "A thread outside the host team (Phase 2). It may only send and ask a host member, and a host member answers it only by reply or bounce.",
+      "properties": {
+        "caller": {
+          "additionalProperties": false,
+          "properties": {
+            "agent": {
+              "$ref": "#/$defs/Name",
+              "description": "The caller thread's agent: a host rule's from, and the deciding rule's key."
+            },
+            "branch_id": {
+              "$ref": "#/$defs/BranchId"
+            },
+            "thread_id": {
+              "$ref": "#/$defs/ThreadId"
+            }
+          },
+          "required": [
+            "thread_id",
+            "branch_id",
+            "agent"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "caller"
+      ],
+      "type": "object"
+    },
+    "CancelledResult": {
+      "additionalProperties": false,
+      "properties": {
+        "member": {
+          "$ref": "#/$defs/MemberRef"
+        },
+        "status": {
+          "const": "cancelled"
+        }
+      },
+      "required": [
+        "member",
+        "status"
+      ],
+      "type": "object"
     },
     "CitationPart": {
       "additionalProperties": false,
@@ -113,6 +191,27 @@
         "type",
         "source_kind",
         "source_id"
+      ],
+      "type": "object"
+    },
+    "CompletedResult": {
+      "additionalProperties": false,
+      "properties": {
+        "member": {
+          "$ref": "#/$defs/MemberRef"
+        },
+        "output": {
+          "$ref": "#/$defs/TextBody",
+          "description": "The latest task's answer; structured output is its accepted value as RFC 8785 JSON text."
+        },
+        "status": {
+          "const": "completed"
+        }
+      },
+      "required": [
+        "member",
+        "status",
+        "output"
       ],
       "type": "object"
     },
@@ -161,6 +260,142 @@
     },
     "EventId": {
       "$ref": "#/$defs/Uuid"
+    },
+    "ExhaustedResult": {
+      "additionalProperties": false,
+      "properties": {
+        "budget": {
+          "additionalProperties": false,
+          "else": {
+            "not": {
+              "required": [
+                "owner_thread_id"
+              ]
+            }
+          },
+          "if": {
+            "properties": {
+              "scope": {
+                "const": "ancestor"
+              }
+            }
+          },
+          "properties": {
+            "limit": {
+              "enum": [
+                "max_cost_nanos",
+                "max_input_tokens",
+                "max_output_tokens",
+                "max_model_requests",
+                "max_turns",
+                "max_wall_ms"
+              ]
+            },
+            "limit_value": {
+              "$ref": "#/$defs/Int"
+            },
+            "observed": {
+              "$ref": "#/$defs/Int"
+            },
+            "observed_is_upper_bound": {
+              "description": "true when unknown usage was counted at its conservative upper bound.",
+              "type": "boolean"
+            },
+            "owner_thread_id": {
+              "$ref": "#/$defs/ThreadId",
+              "description": "Required exactly when scope is ancestor: the ancestor thread whose budget refused the reservation."
+            },
+            "scope": {
+              "description": "Which budget refused the reservation. run and thread: this thread's own budget (the owner is the envelope thread_id, so owner_thread_id is absent). ancestor: a budget of an ancestor thread in the agent tree, named by owner_thread_id. hop (Phase 2): the host rule's per-hop cap on a host member's turn, budget id hop:<branch_id>:<turn opener event_id>; only that turn ends.",
+              "enum": [
+                "run",
+                "thread",
+                "ancestor",
+                "hop"
+              ]
+            }
+          },
+          "required": [
+            "scope",
+            "limit",
+            "limit_value",
+            "observed",
+            "observed_is_upper_bound"
+          ],
+          "then": {
+            "required": [
+              "owner_thread_id"
+            ]
+          },
+          "type": "object"
+        },
+        "member": {
+          "$ref": "#/$defs/MemberRef"
+        },
+        "status": {
+          "const": "budget_exhausted"
+        }
+      },
+      "required": [
+        "member",
+        "status",
+        "budget"
+      ],
+      "type": "object"
+    },
+    "FailedResult": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "$ref": "#/$defs/MemberErrorCode"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "message"
+          ],
+          "type": "object"
+        },
+        "member": {
+          "$ref": "#/$defs/MemberRef"
+        },
+        "status": {
+          "const": "failed"
+        }
+      },
+      "required": [
+        "member",
+        "status",
+        "error"
+      ],
+      "type": "object"
+    },
+    "HandedOffResult": {
+      "additionalProperties": false,
+      "properties": {
+        "member": {
+          "$ref": "#/$defs/MemberRef"
+        },
+        "status": {
+          "const": "handed_off"
+        },
+        "to_thread": {
+          "$ref": "#/$defs/ThreadId",
+          "description": "The lead only: members can't hand off."
+        }
+      },
+      "required": [
+        "member",
+        "status",
+        "to_thread"
+      ],
+      "type": "object"
     },
     "HostedToolPart": {
       "additionalProperties": false,
@@ -300,6 +535,632 @@
         }
       ]
     },
+    "MailAddress": {
+      "description": "A member at one generation, the team log (the operator's replies and notifications), or a caller thread outside the host team.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "generation": {
+              "$ref": "#/$defs/PosInt"
+            },
+            "name": {
+              "$ref": "#/$defs/MemberName"
+            }
+          },
+          "required": [
+            "name",
+            "generation"
+          ],
+          "type": "object"
+        },
+        {
+          "const": "team_log"
+        },
+        {
+          "$ref": "#/$defs/CallerAddress"
+        }
+      ]
+    },
+    "MailEnvelope": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "body"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "message",
+                  "ask",
+                  "reply",
+                  "task"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "ask_id"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "ask",
+                  "reply",
+                  "bounce"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "deadline"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "ask"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "monitor_id"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "member_settled",
+                  "member_parked",
+                  "member_ended"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "reason"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "member_parked"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "member_settled",
+                  "member_ended",
+                  "bounce"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "code"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "bounce"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "error"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "bounce"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "message",
+                  "task"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "body"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "ask"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "body",
+              "ask_id",
+              "deadline"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "reply"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "body",
+              "ask_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "member_settled",
+                  "member_ended"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "monitor_id",
+              "result"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "member_parked"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "monitor_id",
+              "reason"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "bounce"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "code"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "enum": [
+                  "stale_member",
+                  "member_ended"
+                ]
+              },
+              "kind": {
+                "const": "bounce"
+              }
+            },
+            "required": [
+              "ask_id"
+            ]
+          },
+          "then": {
+            "required": [
+              "result"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "const": "turn_failed"
+              }
+            },
+            "required": [
+              "code"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "result"
+              ]
+            },
+            "required": [
+              "ask_id",
+              "error"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "error"
+            ]
+          },
+          "then": {
+            "properties": {
+              "code": {
+                "const": "turn_failed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "from": {
+                "required": [
+                  "caller"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "message",
+                  "ask"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "to": {
+                "not": {
+                  "const": "team_log"
+                },
+                "required": [
+                  "caller"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "reply",
+                  "bounce"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "reply",
+                  "member_settled",
+                  "member_parked",
+                  "member_ended",
+                  "bounce"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "from": {
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "to": {
+                "const": "team_log"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "reply",
+                  "member_settled",
+                  "member_parked",
+                  "member_ended",
+                  "bounce"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "member_settled"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "properties": {
+                  "status": {
+                    "const": "completed"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "member_ended"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "not": {
+                  "properties": {
+                    "status": {
+                      "const": "completed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "description": "One mail, as the sender's message_sent records it and every receipt copies it byte for byte. member_parked is a one-time, non-consuming park notice.",
+      "properties": {
+        "ask_id": {
+          "$ref": "#/$defs/AskId",
+          "description": "ask: its own mail_id. reply: the ask it answers. bounce: the open ask it closes as member_ended, or as failed for turn_failed."
+        },
+        "body": {
+          "$ref": "#/$defs/TextBody"
+        },
+        "causal": {
+          "$ref": "#/$defs/RequestRef",
+          "description": "The request or event that caused this mail: the call's tool_call, the operator_request, the member's idle or end event, or the refused mail's mail_refused."
+        },
+        "code": {
+          "description": "bounce: why. stale_member and member_ended answer a mail_refused; turn_failed (Phase 2) answers an ask a host member's failed turn took.",
+          "enum": [
+            "stale_member",
+            "member_ended",
+            "turn_failed"
+          ]
+        },
+        "deadline": {
+          "$ref": "#/$defs/TimeMs",
+          "description": "ask: now + timeoutMs."
+        },
+        "error": {
+          "$ref": "#/$defs/TurnFailure",
+          "description": "turn_failed only: why the host member's turn failed; the ask closes failed with it."
+        },
+        "from": {
+          "$ref": "#/$defs/MailSender"
+        },
+        "kind": {
+          "enum": [
+            "message",
+            "ask",
+            "reply",
+            "task",
+            "cancel",
+            "member_settled",
+            "member_parked",
+            "member_ended",
+            "bounce"
+          ]
+        },
+        "mail_id": {
+          "$ref": "#/$defs/MailId"
+        },
+        "monitor_id": {
+          "$ref": "#/$defs/MonitorId",
+          "description": "The monitor this notification fires; its row is deleted in the same append."
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "reason": {
+          "$ref": "#/$defs/ParkReason",
+          "description": "member_parked: the member's park reason."
+        },
+        "result": {
+          "$ref": "#/$defs/StoredMemberResult",
+          "description": "member_settled (completed), member_ended (terminal), or an ask's bounce (the ended member's result)."
+        },
+        "team": {
+          "$ref": "#/$defs/TeamId"
+        },
+        "to": {
+          "$ref": "#/$defs/MailAddress"
+        }
+      },
+      "required": [
+        "mail_id",
+        "kind",
+        "team",
+        "from",
+        "to",
+        "provenance",
+        "causal"
+      ],
+      "type": "object"
+    },
+    "MailId": {
+      "description": "<sender branch_id>:<call_id or request_id> for mail a call sends; <sender branch_id>:<event_id of the message_sent> for mail the runtime sends (notifications, bounces, lead-close cancels).",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9_.-]{1,128}$",
+      "type": "string"
+    },
+    "MailSender": {
+      "description": "The sending member, the operator request, or a caller thread. Written by the fenced writer; never an actor.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/MemberRef"
+        },
+        {
+          "$ref": "#/$defs/OperatorSender"
+        },
+        {
+          "$ref": "#/$defs/CallerAddress"
+        }
+      ]
+    },
+    "MemberErrorCode": {
+      "description": "A failed member's code: the host API RunErrorCode, plus pin_unavailable and pin_mismatch for a failed rebind, and setup_failed for a member whose setup kept failing.",
+      "enum": [
+        "model_unavailable",
+        "context_exhausted",
+        "max_output",
+        "max_turns",
+        "output_invalid",
+        "input_denied",
+        "stop_hook_limit",
+        "model_error",
+        "content_unsupported",
+        "continuation_unsupported",
+        "transport_fence_unsupported",
+        "secret_in_provider_output",
+        "secret_in_stored_bytes",
+        "artifact_missing",
+        "artifact_corrupt",
+        "unmatched_external_op",
+        "branch_busy",
+        "branch_not_runnable",
+        "pin_unavailable",
+        "pin_mismatch",
+        "setup_failed"
+      ]
+    },
+    "MemberName": {
+      "description": "<agent>-<k>, k counting that agent's members in the team from 1. The lead's name is its agent name.",
+      "pattern": "^[a-z][a-z0-9_]{0,63}(-[1-9][0-9]*)?$",
+      "type": "string"
+    },
+    "MemberRef": {
+      "additionalProperties": false,
+      "description": "One member of one team. Immutable.",
+      "properties": {
+        "generation": {
+          "$ref": "#/$defs/PosInt",
+          "description": "Changes only through a supervised restart; 1 until then."
+        },
+        "name": {
+          "$ref": "#/$defs/MemberName"
+        },
+        "team": {
+          "$ref": "#/$defs/TeamId"
+        },
+        "tenant": {
+          "$ref": "#/$defs/NonEmpty"
+        }
+      },
+      "required": [
+        "tenant",
+        "team",
+        "name",
+        "generation"
+      ],
+      "type": "object"
+    },
+    "MonitorId": {
+      "description": "<watcher branch_id>:<event_id of the registering event>:<target name>; the target name is task for a start's task monitor. Derived, never generated.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[a-z][a-z0-9_]{0,63}(-[1-9][0-9]*)?$",
+      "type": "string"
+    },
     "Name": {
       "pattern": "^[a-z][a-z0-9_]{0,63}$",
       "type": "string"
@@ -307,6 +1168,18 @@
     "NonEmpty": {
       "minLength": 1,
       "type": "string"
+    },
+    "OperatorSender": {
+      "additionalProperties": false,
+      "properties": {
+        "operator": {
+          "$ref": "#/$defs/RequestId"
+        }
+      },
+      "required": [
+        "operator"
+      ],
+      "type": "object"
     },
     "OutputPart": {
       "oneOf": [
@@ -330,6 +1203,16 @@
         }
       ]
     },
+    "ParkReason": {
+      "description": "Why a branch is parked.",
+      "enum": [
+        "awaiting_approval",
+        "effect_unknown",
+        "awaiting_input",
+        "awaiting_resource",
+        "awaiting_member"
+      ]
+    },
     "PosInt": {
       "allOf": [
         {
@@ -339,6 +1222,54 @@
           "minimum": 1
         }
       ]
+    },
+    "Principal": {
+      "additionalProperties": false,
+      "description": "A verified identity, normalized by the host. issuer names the identity authority (e.g. slack:T024BE7LD, api), tenant the isolation scope.",
+      "properties": {
+        "issuer": {
+          "$ref": "#/$defs/NonEmpty"
+        },
+        "subject": {
+          "$ref": "#/$defs/NonEmpty"
+        },
+        "tenant": {
+          "$ref": "#/$defs/NonEmpty"
+        }
+      },
+      "required": [
+        "issuer",
+        "tenant",
+        "subject"
+      ],
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Causal, not structural: who originated the work and which request it belongs to. One turn's opening batch shares one (principal, root_request).",
+      "properties": {
+        "principal": {
+          "$ref": "#/$defs/Principal",
+          "description": "The verified originating principal: the root run's input principal, or the operator's."
+        },
+        "root_request": {
+          "$ref": "#/$defs/RequestRef",
+          "description": "The lead run's user_input, or the team log's operator_request. Budgets roll up to its run budget."
+        },
+        "via": {
+          "description": "The member hops. Provenance only: authority, credentials and grants never transfer.",
+          "items": {
+            "$ref": "#/$defs/MemberRef"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "principal",
+        "root_request",
+        "via"
+      ],
+      "type": "object"
     },
     "ReasoningPart": {
       "additionalProperties": false,
@@ -370,6 +1301,27 @@
         "model",
         "format",
         "ref"
+      ],
+      "type": "object"
+    },
+    "RequestId": {
+      "$ref": "#/$defs/Uuid",
+      "description": "One operator request: a team.start, send, ask, wait or cancel call."
+    },
+    "RequestRef": {
+      "additionalProperties": false,
+      "description": "An event in another thread's log, by thread and event id.",
+      "properties": {
+        "event_id": {
+          "$ref": "#/$defs/EventId"
+        },
+        "thread_id": {
+          "$ref": "#/$defs/ThreadId"
+        }
+      },
+      "required": [
+        "thread_id",
+        "event_id"
       ],
       "type": "object"
     },
@@ -410,6 +1362,77 @@
         "end"
       ],
       "type": "object"
+    },
+    "StoredMemberResult": {
+      "description": "What a settled member returned, as member_idle, member_ended, notifications and member_observed record it. Public result APIs hydrate a ref'd output (sha256 and length verified); the audit feed returns it as stored.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CompletedResult"
+        },
+        {
+          "$ref": "#/$defs/FailedResult"
+        },
+        {
+          "$ref": "#/$defs/CancelledResult"
+        },
+        {
+          "$ref": "#/$defs/ExhaustedResult"
+        },
+        {
+          "$ref": "#/$defs/HandedOffResult"
+        }
+      ]
+    },
+    "TeamId": {
+      "$ref": "#/$defs/Uuid"
+    },
+    "TextBody": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$ref": "#/$defs/TextOrRef"
+        }
+      ],
+      "description": "Inline text up to the inline cap, else a content-addressed artifact written before the append.",
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "TextOrContent": {
+      "description": "Exactly one of plain text or ordered input parts.",
+      "oneOf": [
+        {
+          "required": [
+            "text"
+          ]
+        },
+        {
+          "required": [
+            "content"
+          ]
+        }
+      ]
+    },
+    "TextOrRef": {
+      "description": "Exactly one of inline text or an artifact ref.",
+      "oneOf": [
+        {
+          "required": [
+            "text"
+          ]
+        },
+        {
+          "required": [
+            "ref"
+          ]
+        }
+      ]
     },
     "TextPart": {
       "additionalProperties": false,
@@ -499,6 +1522,39 @@
           "type": "array"
         }
       },
+      "type": "object"
+    },
+    "TurnFailure": {
+      "additionalProperties": false,
+      "description": "Why a host member's turn failed (Phase 2). Only that turn ends: its unanswered asks close failed and the member goes back to idle.",
+      "properties": {
+        "code": {
+          "description": "Mapped from the failed turn's turn_completed: its reason (max_turns, max_output, stop_hook_limit, context_exhausted, output_invalid, input_denied, model_unavailable, budget_exhausted for the hop cap or the caller's run budget, interrupted for a turn recovery closed), or for reason error its code (content_unsupported, continuation_unsupported, transport_fence_unsupported, secret_in_provider_output), else model_error.",
+          "enum": [
+            "model_error",
+            "content_unsupported",
+            "continuation_unsupported",
+            "transport_fence_unsupported",
+            "secret_in_provider_output",
+            "max_turns",
+            "max_output",
+            "stop_hook_limit",
+            "context_exhausted",
+            "output_invalid",
+            "input_denied",
+            "model_unavailable",
+            "budget_exhausted",
+            "interrupted"
+          ]
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
       "type": "object"
     },
     "Uuid": {
@@ -645,6 +1701,44 @@
               "content",
               "completeness",
               "stop_reason"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "additionalProperties": false,
+                "properties": {
+                  "envelope": {
+                    "$ref": "#/$defs/MailEnvelope",
+                    "description": "Byte for byte the sender's message_sent envelope, provenance included, so every rule about received mail reads only this log."
+                  },
+                  "mail_id": {
+                    "$ref": "#/$defs/MailId"
+                  }
+                },
+                "required": [
+                  "mail_id",
+                  "envelope"
+                ],
+                "type": "object"
+              },
+              "event_id": {
+                "$ref": "#/$defs/EventId"
+              },
+              "role": {
+                "const": "mail"
+              },
+              "seq": {
+                "$ref": "#/$defs/PosInt"
+              }
+            },
+            "required": [
+              "event_id",
+              "seq",
+              "role",
+              "data"
             ],
             "type": "object"
           }
@@ -837,6 +1931,195 @@
       },
       "type": "array"
     },
+    "trigger": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "$ref": "#/$defs/TextOrContent"
+                },
+                {
+                  "else": {
+                    "not": {
+                      "required": [
+                        "mail_id"
+                      ]
+                    }
+                  },
+                  "if": {
+                    "properties": {
+                      "source": {
+                        "const": "team_task"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "mail_id"
+                    ]
+                  }
+                },
+                {
+                  "else": {
+                    "not": {
+                      "required": [
+                        "a2a"
+                      ]
+                    }
+                  },
+                  "if": {
+                    "properties": {
+                      "source": {
+                        "const": "api"
+                      }
+                    }
+                  }
+                }
+              ],
+              "properties": {
+                "a2a": {
+                  "additionalProperties": false,
+                  "description": "Only with source api: the A2A message this input arrived as, recorded so a resend of the same messageId finds its run. claims is what the calling partner asserted about provenance and is untrusted: it never grants authority, never picks a budget and never becomes provenance.principal, which is always the authenticated principal of the call.",
+                  "properties": {
+                    "claims": {
+                      "$ref": "#/$defs/JsonObject"
+                    },
+                    "context_id": {
+                      "$ref": "#/$defs/NonEmpty"
+                    },
+                    "message_id": {
+                      "$ref": "#/$defs/NonEmpty"
+                    },
+                    "task_id": {
+                      "$ref": "#/$defs/NonEmpty"
+                    }
+                  },
+                  "required": [
+                    "message_id",
+                    "context_id"
+                  ],
+                  "type": "object"
+                },
+                "budget": {
+                  "$ref": "#/$defs/Budget",
+                  "description": "The budget of the run this input starts."
+                },
+                "client_message_id": {
+                  "description": "The id a web UI gave this message (the AI SDK UIMessage id or the AG-UI message id), recorded by the UI routes so a retry finds its run and a snapshot names the message as the client does. Not rendered.",
+                  "pattern": "^[A-Za-z0-9_.-]{1,128}$",
+                  "type": "string"
+                },
+                "content": {
+                  "items": {
+                    "$ref": "#/$defs/InputPart"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "delivery_event_id": {
+                  "$ref": "#/$defs/EventId",
+                  "description": "The channel_delivery or schedule_fired event this input came from."
+                },
+                "mail_id": {
+                  "$ref": "#/$defs/MailId",
+                  "description": "Exactly with source team_task: the task mail this input consumes (its row becomes consumed in this append)."
+                },
+                "source": {
+                  "enum": [
+                    "api",
+                    "cli",
+                    "channel",
+                    "schedule",
+                    "parent_agent",
+                    "handoff",
+                    "team_task"
+                  ]
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "user_input"
+            }
+          },
+          "required": [
+            "type",
+            "data"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "additionalProperties": false,
+              "properties": {
+                "causes": {
+                  "description": "The tool_result_late events in this same append that woke the thread.",
+                  "items": {
+                    "$ref": "#/$defs/EventId"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "causes"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "woken"
+            }
+          },
+          "required": [
+            "type",
+            "data"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "additionalProperties": false,
+              "properties": {
+                "envelope": {
+                  "$ref": "#/$defs/MailEnvelope",
+                  "description": "Byte for byte the sender's message_sent envelope, provenance included, so every rule about received mail reads only this log."
+                },
+                "mail_id": {
+                  "$ref": "#/$defs/MailId"
+                }
+              },
+              "required": [
+                "mail_id",
+                "envelope"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "message_received"
+            }
+          },
+          "required": [
+            "type",
+            "data"
+          ],
+          "type": "object"
+        }
+      ]
+    },
     "turn_id": {
       "$ref": "#/$defs/EventId"
     }
@@ -848,6 +2131,7 @@
     "turn_id",
     "started_at",
     "completed_at",
+    "trigger",
     "completion",
     "messages",
     "tool_calls",

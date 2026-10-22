@@ -132,7 +132,7 @@ threadsai --store .threads --tenant local export --jsonl > turns.jsonl
 threadsai --store .threads export --jsonl --thread 0192a000-0000-7000-8000-000000000001 --since 1790000000000
 ```
 
-This exports one completed user turn per line. It also works through
+This exports one completed turn per line, including background wakes and qualifying mail turns. It also works through
 `exportTrajectories(store, { threads, since })` in TypeScript and
 `await export_trajectories(store, threads=..., since=...)` in Python. Both return
 an expected-failure Result containing identical UTF-8 bytes for the same log.
@@ -145,8 +145,9 @@ select several threads. Python's global `--store` and `--tenant` go before `expo
 Every line is canonical JSON followed by LF, with these keys:
 
 - `format_version`: `1`
-- `thread_id`, `branch_id`, `turn_id`: thread, completion branch and opening user input event
+- `thread_id`, `branch_id`, `turn_id`: thread, completion branch and opening event
 - `started_at`, `completed_at`: timestamps in Unix milliseconds
+- `trigger`: the opening `user_input`, `woken` or `message_received` event's `type` and original `data`
 - `completion`: logged turn completion reason and optional error code
 - `messages`: ordered `user` and `assistant` content-part arrays, with `event_id` and `seq`;
   assistant messages also include `completeness` and `stop_reason`
@@ -154,6 +155,10 @@ Every line is canonical JSON followed by LF, with these keys:
   `input` and `request_event_id`
 - `tool_results`: `event_id`, `seq`, `type` (`tool_result` or `tool_result_late`) and
   original `data`, including previews, inline content or artifact references
+
+Renderable mail messages have role `mail` and their original `data` envelope,
+including provenance. Control-only and wait-settle receipts do not render.
+Wake turns retain their preceding causal late results, named in `trigger.data.causes`.
 
 Use `seq` to merge the three arrays into execution order and `call_id` to join
 calls to results. Model `tool_use` parts are proposals; `tool_calls` records admitted

@@ -1,5 +1,7 @@
 import { ConfigError } from "../agent/errors";
 import { openStore, type Store } from "../agent/sqlite";
+import { turnInputs } from "../fold/openers";
+import type { KnownEvent } from "../log";
 import { JsonObject } from "../log/primitives";
 import { containsSecret } from "../redact";
 import { err, ok, type Result } from "../result";
@@ -39,13 +41,15 @@ export async function exportTrajectories(
     if (leaf?.header.thread_id !== row.thread_id || leaf.header.branch_id !== row.branch_id)
       return err(logError("log_corrupt", "trajectory index does not match verified log"));
     const events = [];
+    const known: KnownEvent[] = [];
     for (const line of read.value.events) {
       if (line.kind !== "event") continue;
       const event = JsonObject.safeParse(line.event);
       if (!event.success) return err(logError("log_corrupt", "invalid stored event"));
       events.push(event.data);
+      known.push(line.event);
     }
-    try { chunks.push(project(events, row.branch_id, parsed.data.since)); }
+    try { chunks.push(project(events, row.branch_id, turnInputs(known), parsed.data.since)); }
     catch (error) {
       if (error instanceof ProjectionError) return err(logError("invalid_line", "trajectory cannot be represented as canonical JSON"));
       throw error;

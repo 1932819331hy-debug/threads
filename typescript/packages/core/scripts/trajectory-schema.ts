@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TextOrContent, TextOrRef } from "../src/log";
 import { TrajectorySchema } from "../src/trajectories/schema";
 import { type Node, tidy } from "./spec-schema";
 
@@ -6,9 +7,9 @@ function node(value: z.core.util.JSONType | undefined): value is Node {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-/** Export with the event rules pass, including TurnCompletedData's error-code rule. */
+/** Include definitions named only by event refinements, then apply the shared rules pass. */
 export function trajectorySchema(): Node {
-  const exported = z.toJSONSchema(TrajectorySchema, {
+  const exported = z.toJSONSchema(z.tuple([TrajectorySchema, TextOrContent, TextOrRef]), {
     target: "draft-2020-12", io: "input", unrepresentable: "throw",
   });
   const tree: z.core.util.JSONType = JSON.parse(JSON.stringify(exported));

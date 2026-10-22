@@ -4,26 +4,36 @@
 threads=..., since=...)` returns UTF-8 bytes in a Result. It reads the tenant view
 of the supplied Store and never dispatches models, tools or sandbox operations.
 
-One RFC 8785 canonical JSON object plus LF is emitted per `user_input` closed by
-`turn_completed`. All completion reasons are retained, including failures; an
+One RFC 8785 canonical JSON object plus LF is emitted per turn closed by
+`turn_completed`. The existing turn-opening rules apply: `user_input`, `woken`,
+and qualifying `message_received` receipts open turns. Team logs, control-only
+mail, wait-settle notices and receipts blocked by unresolved parks do not open
+turns. All completion reasons are retained, including failures; an
 open, parked or interrupted tail without `turn_completed` contributes no line.
 Completed earlier turns are retained even if the thread currently has an open turn.
 
 A line has `format_version: 1`, `thread_id`, `branch_id` (the branch that recorded
-the completion), `turn_id` (the opening user_input event id), `started_at`,
+the completion), `turn_id` (the opening event id), `started_at`,
 `completed_at` (Unix epoch milliseconds), `completion` (turn_completed data),
-`messages`, `tool_calls` and `tool_results`. Every array entry carries `event_id`
+`trigger` (the opener's original `type` and `data`), `messages`, `tool_calls` and
+`tool_results`. Every array entry carries `event_id`
 and `seq`; sorting these entries by seq reconstructs their interleaving.
 
 - `messages`: user_input/steer become role `user`, model_response and
   model_response_recovered become role `assistant`. Content parts are the log's
   ordered parts; plain input text becomes one text part. Assistant messages keep
-  `completeness` and `stop_reason`. Summarizer/compaction responses are omitted.
+  `completeness` and `stop_reason`. Renderable mail receipts use role `mail` and
+  retain their original `data`, including the complete envelope and provenance.
+  Control-only and wait-settle receipts are omitted. Mail is not rewritten into
+  trusted user text. Summarizer/compaction responses are omitted.
 - `tool_calls`: schema-admitted calls, with their original `data` (call_id, name,
   input and request_event_id), separate from proposed tool_use content parts.
 - `tool_results`: original `type` and `data`, preserving error, completeness,
   deferred placeholders, late results and spill refs. A late result belongs to
-  the turn during which it was recorded; an idle late result is not a new turn.
+  the turn during which it was recorded. A `woken` turn also includes the preceding
+  late results named by its `causes`, in their recorded sequence order; these are
+  its input even though their sequence precedes the opener. An idle late result
+  without a wake contributes no line.
 
 This is a provider-neutral turn format, not a provider's fine-tuning upload
 schema. A training consumer can join tool calls/results on call_id, inspect the

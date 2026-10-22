@@ -1,5 +1,8 @@
 """Generated trajectory vectors; logs use the same builders as conformance cases."""
 
+from pathlib import Path
+
+from .trajectory_turns import inputs, rows as turn_rows
 from .common import BRANCH, CASES, obj, tokens
 from .jcs import JsonValue, canonical
 from .log import Log
@@ -8,7 +11,7 @@ from .pieces import READ_FILE, dump, read_turn, started, user
 VECTOR = CASES.parent / "vectors" / "trajectories.json"
 
 
-def rows() -> list[JsonValue]:
+def rows(cases: Path = CASES) -> list[JsonValue]:
     log = Log()
     started(log, [READ_FILE])
     read_turn(log)
@@ -22,6 +25,7 @@ def rows() -> list[JsonValue]:
         "thread_id": log.thread,
         "branch_id": BRANCH,
         "turn_id": u["event_id"],
+        "trigger": {"type": u["type"], "data": u["data"]},
         "started_at": u["time"],
         "completed_at": end["time"],
         "completion": end["data"],
@@ -48,6 +52,7 @@ def rows() -> list[JsonValue]:
         "thread_id": log.thread,
         "branch_id": BRANCH,
         "turn_id": opening["event_id"],
+        "trigger": {"type": opening["type"], "data": opening["data"]},
         "started_at": opening["time"],
         "completed_at": completion["time"],
         "completion": completion["data"],
@@ -79,16 +84,17 @@ def rows() -> list[JsonValue]:
     user(log, "Unfinished input")
     expected: list[JsonValue] = [first_row, second]
     return [{
-        "branch_id": BRANCH, "events": log.events, "log": log.export().decode(),
+        "name": "two-user-turns", "branch_id": BRANCH, "events": log.events, "log": log.export().decode(),
+        "inputs": [[i, opens] for i, opens in inputs(log.events).items()],
         "expected": expected,
         "jsonl": b"".join(canonical(row) + b"\n" for row in expected).decode(),
-    }]
+    }, *turn_rows(cases)]
 
 
-def write() -> None:
-    VECTOR.write_text(dump(rows()), encoding="utf-8")
+def write(cases: Path = CASES) -> None:
+    VECTOR.write_text(dump(rows(cases)), encoding="utf-8")
 
 
-def check() -> list[str]:
-    current = VECTOR.exists() and VECTOR.read_text(encoding="utf-8") == dump(rows())
+def check(cases: Path = CASES) -> list[str]:
+    current = VECTOR.exists() and VECTOR.read_text(encoding="utf-8") == dump(rows(cases))
     return [] if current else ["trajectories.json is stale"]

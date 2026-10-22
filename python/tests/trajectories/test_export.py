@@ -11,21 +11,22 @@ from threadsai import export_trajectories, secret
 from threadsai._generated.trajectory_v1 import TrajectoryBranch
 from threadsai.agents.config import ConfigError
 from threadsai.agents.store import Store
-from threadsai.log import BranchId, ThreadId
+from threadsai.log import BranchId, Event, ThreadId
 from threadsai.redaction import forget_secrets
 from threadsai.result import Err, Ok
 from threadsai.secrets import resolve
 from threadsai.store.conn import Conn, Cursor, Params
 from threadsai.store.verify import verify_export
-from threadsai.trajectories.project import project
+from threadsai.reduce.openers import turn_inputs
+from threadsai.trajectories.project import project as raw_project
 
 ROOT = Path(__file__).resolve().parents[3]
 VECTOR = ROOT / "spec/conformance/vectors/trajectories.json"
 _JSON = TypeAdapter(list[dict[str, JsonValue]])
 
 
-def vector() -> dict[str, JsonValue]:
-    return _JSON.validate_json(VECTOR.read_bytes())[0]
+def vector(index: int = 0) -> dict[str, JsonValue]:
+    return _JSON.validate_json(VECTOR.read_bytes())[index]
 
 
 def events(value: dict[str, JsonValue]) -> list[dict[str, JsonValue]]:
@@ -40,11 +41,12 @@ def text(value: JsonValue) -> str:
 class Rows:
     rowcount = 1
 
-    def __init__(self, verified: int) -> None:
+    def __init__(self, verified: int, index: int = 0) -> None:
         self.verified = verified
+        self.index = index
 
     def fetchall(self) -> list[tuple[object, ...]]:
-        first = events(vector())[0]
+        first = events(vector(self.index))[0]
         return [(first["branch_id"], first["thread_id"], self.verified)]
 
     def fetchone(self) -> tuple[object, ...] | None:
@@ -52,15 +54,16 @@ class Rows:
 
 
 class FakeConn(Conn):
-    def __init__(self, verified: int) -> None:
+    def __init__(self, verified: int, index: int = 0) -> None:
         super().__init__()
+        self.index = index
         self.depth = 1
         self.verified = verified
 
     def _execute(self, sql: str, params: Params) -> Cursor:
         assert "WHERE tenant_id = ?" in sql
         assert params == ("tenant-a",)
-        return Rows(self.verified)
+        return Rows(self.verified, self.index)
 
     def _executemany(self, sql: str, rows: Iterable[Params]) -> None:
         raise AssertionError("no writes")
@@ -79,26 +82,41 @@ class FakeConn(Conn):
 
 
 class FakeStore:
-    def __init__(self, verified: int) -> None:
+    def __init__(self, verified: int, index: int = 0) -> None:
         self.verified = verified
+        self.index = index
 
     async def run(
         self, fn: Callable[[Conn], tuple[TrajectoryBranch, ...]], *, read_only: bool
     ) -> tuple[TrajectoryBranch, ...]:
         assert read_only
-        return fn(FakeConn(self.verified))
+        return fn(FakeConn(self.verified, self.index))
 
     async def read(self, branch: BranchId, now: int) -> object:
-        v = vector()
+        v = vector(self.index)
         assert branch == v["branch_id"]
         return verify_export(text(v["log"]).encode(), now)
 
 
-def store(monkeypatch: pytest.MonkeyPatch, verified: int = 1) -> Store:
+def store(monkeypatch: pytest.MonkeyPatch, verified: int = 1, index: int = 0) -> Store:
     monkeypatch.setattr(
-        "threadsai.trajectories.open_store", AsyncMock(return_value=FakeStore(verified))
+        "threadsai.trajectories.open_store", AsyncMock(return_value=FakeStore(verified, index))
     )
     return Store("must-not-open", tenant="tenant-a")
+
+
+def project(raw: list[dict[str, JsonValue]], branch: str) -> bytes:
+    known = TypeAdapter(list[Event]).validate_python(raw)
+    return raw_project(raw, branch, turn_inputs(known))
+
+
+@pytest.mark.parametrize("index", range(len(_JSON.validate_json(VECTOR.read_bytes()))))
+def test_all_turns_and_input_context(monkeypatch: pytest.MonkeyPatch, index: int) -> None:
+    v = vector(index)
+    known = TypeAdapter(list[Event]).validate_python(events(v))
+    assert [[i, opening] for i, opening in turn_inputs(known).items()] == v["inputs"]
+    assert project(events(v), text(v["branch_id"])) == text(v["jsonl"]).encode()
+    assert finish(export_trajectories(store(monkeypatch, index=index))) == Ok(text(v["jsonl"]).encode())
 
 
 def test_shared_bytes_and_unfinished_tail(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -187,3 +205,27 @@ def test_registered_secret_is_absent_from_success(monkeypatch: pytest.MonkeyPatc
         assert b"synthetic-api-credential-000" not in result.value
     finally:
         forget_secrets()
+
+
+def test_unresolved_park_and_wait_settle_inputs() -> None:
+    """Schema-valid inputs to the pure scanner, not complete semantically verified logs."""
+    all_vectors = _JSON.validate_json(VECTOR.read_bytes())
+    parked = next(v for v in all_vectors if v["name"] == "run-member-parks-then-final-answer/log.jsonl")
+    team = next(v for v in all_vectors if v["name"] == "team-operator-start-and-wait/logs/team.jsonl")
+    es = events(parked)
+    park = next(e for e in es if e["type"] == "parked")
+    notice = next(e for e in es if e["type"] == "message_received" and e["seq"] == 17)
+    wait = next(e for e in events(team) if e["type"] == "wait_started")
+    data = TypeAdapter(dict[str, JsonValue]).validate_python(park["data"])
+    address = TypeAdapter(dict[str, JsonValue]).validate_python(data["address"])
+    other = {**park, "data": {**data, "address": {"kind": "member", "id": text(address["id"]) + "-other"}}}
+    adapter = TypeAdapter(list[Event])
+    assert dict(turn_inputs(adapter.validate_python([park, notice]))) == {1: True}
+    assert dict(turn_inputs(adapter.validate_python([park, other, notice]))) == {2: False}
+    wait_data = TypeAdapter(dict[str, JsonValue]).validate_python(wait["data"])
+    members = _JSON.validate_python(wait_data["members"])
+    notice_data = TypeAdapter(dict[str, JsonValue]).validate_python(notice["data"])
+    envelope = TypeAdapter(dict[str, JsonValue]).validate_python(notice_data["envelope"])
+    settlement = {**notice, "data": {**notice_data, "envelope": {**envelope,
+        "monitor_id": f"{wait['branch_id']}:{wait['event_id']}:{members[0]['name']}"}}}
+    assert dict(turn_inputs(adapter.validate_python([wait, settlement]))) == {}

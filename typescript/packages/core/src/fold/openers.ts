@@ -20,18 +20,19 @@ function opens(
   return mailRenders(env, settle) && resolved;
 }
 
-/** The index of the event that opened the open (or last) turn; undefined before any turn. */
-export function turnStart(events: readonly KnownEvent[]): number | undefined {
-  if (events[0]?.type === "team_opened") return undefined;
+/** Inputs by event index: true opens a turn; false is renderable mail that does not open a turn.
+ * Uses the same park/settle rules as turnStart; team logs have no model turns. */
+export function turnInputs(events: readonly KnownEvent[]): ReadonlyMap<number, boolean> {
+  const inputs = new Map<number, boolean>();
+  if (events[0]?.type === "team_opened") return inputs;
   let inTurn = false;
-  let start: number | undefined;
   let parks: readonly ParkAddress[] = [];
   const settle = new Set<string>();
   events.forEach((e, i) => {
-    if (!inTurn && opens(e, parks, settle)) {
-      inTurn = true;
-      start = i;
-    }
+    const opening = !inTurn && opens(e, parks, settle);
+    if (opening) inTurn = true;
+    if (opening || (e.type === "message_received" && mailRenders(e.data.envelope, settle)))
+      inputs.set(i, opening);
     if (e.type === "turn_completed") inTurn = false;
     else if (e.type === "parked") parks = [...parks, e.data.address];
     else if (e.type === "resumed")
@@ -39,6 +40,13 @@ export function turnStart(events: readonly KnownEvent[]): number | undefined {
     else if (e.type === "wait_started")
       for (const m of e.data.members) settle.add(monitorId(e, m.name));
   });
+  return inputs;
+}
+
+/** The index of the event that opened the open (or last) turn; undefined before any turn. */
+export function turnStart(events: readonly KnownEvent[]): number | undefined {
+  let start: number | undefined;
+  for (const [index, opening] of turnInputs(events)) if (opening) start = index;
   return start;
 }
 

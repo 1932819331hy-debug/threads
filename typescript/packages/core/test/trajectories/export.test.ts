@@ -11,11 +11,13 @@ import type { ArtifactStore } from "../../src/store/artifacts";
 import type { StoreDriver, Tx } from "../../src/store/driver";
 import { LogStore } from "../../src/store/store";
 import { exportTrajectories } from "../../src/trajectories";
-import { project } from "../../src/trajectories/project";
+import { turnInputs } from "../../src/fold/openers";
+import { KnownEvent } from "../../src/log/events";
+import { project as rawProject } from "../../src/trajectories/project";
 import { Trajectory } from "../../src/trajectories/schema";
 import { verifyExport } from "../../src/verify/verify";
 
-const Vector = z.strictObject({ branch_id: z.string(), events: z.array(JsonObject),
+const Vector = z.strictObject({ name: z.string(), inputs: z.array(z.tuple([z.int(), z.boolean()])), branch_id: z.string(), events: z.array(JsonObject),
   log: z.string(), expected: z.array(Trajectory), jsonl: z.string() });
 const vectors = z.array(Vector).parse(JSON.parse(readFileSync(
   new URL("../../../../../spec/conformance/vectors/trajectories.json", import.meta.url), "utf8")));
@@ -28,22 +30,36 @@ const utf8 = new TextDecoder();
 function forbidden(): never { throw new Error("unexpected DB, artifact or transport operation"); }
 
 /** A real LogStore with a mocked driver/read; no database is opened. */
-async function fixture(verified = 1): Promise<Store> {
-  const log = verifyExport(new TextEncoder().encode(vector.log));
+async function fixture(verified = 1, selected: z.infer<typeof Vector> = vector): Promise<Store> {
+  const log = verifyExport(new TextEncoder().encode(selected.log));
   if (!log.ok) throw new Error(log.error.message);
+  const leaf = log.value.segments.at(-1)?.header;
+  if (leaf === undefined) throw new Error("missing header");
   const tx: Tx = { dialect: "sqlite", run: forbidden, transaction: forbidden, afterCommit: forbidden,
     all: async (sql, params) => {
       expect(sql).toContain("WHERE tenant_id = ?"); expect(params).toEqual(["tenant-a"]);
-      return [{ thread_id: first.thread_id, branch_id: first.branch_id, head_verified: verified }];
+      return [{ thread_id: leaf.thread_id, branch_id: leaf.branch_id, head_verified: verified }];
     } };
   const driver: StoreDriver = { dialect: "sqlite", install: async () => ok(undefined), close: forbidden,
     transaction: async (run, options) => { expect(options?.readOnly).toBe(true); return run(tx); } };
   const artifacts: ArtifactStore = { put: forbidden, get: forbidden, sink: forbidden, sweep: forbidden };
   const opened = await LogStore.open(driver, () => 0, artifacts, "tenant-a");
   if (!opened.ok) throw new Error(opened.error.message);
-  opened.value.read = async (id) => { expect(id).toBe(first.branch_id); return log; };
+  opened.value.read = async (id) => { expect(id).toBe(leaf.branch_id); return log; };
   return storeOf({ log: opened.value, artifacts });
 }
+
+function project(events: readonly JsonObject[], branch: string): Uint8Array {
+  return rawProject(events, branch, turnInputs(events.map((e) => KnownEvent.parse(e))));
+}
+
+test.each(vectors)("all turn inputs and exact bytes: $name", async (selected) => {
+  const known = selected.events.map((e) => KnownEvent.parse(e));
+  expect([...turnInputs(known)]).toEqual(selected.inputs);
+  expect(new TextDecoder().decode(project(selected.events, selected.branch_id))).toBe(selected.jsonl);
+  const output = await exportTrajectories(await fixture(1, selected));
+  expect(output.ok && new TextDecoder().decode(output.value)).toBe(selected.jsonl);
+});
 
 afterEach(() => { forgetSecrets(); delete process.env["TRAJECTORY_TEST_SECRET"]; });
 
@@ -119,4 +135,25 @@ test("registered credentials absent from the log remain absent from a successful
   const result = await exportTrajectories(await fixture());
   expect(result.ok).toBe(true);
   expect(JSON.stringify(result)).not.toContain("synthetic-api-credential-000");
+});
+
+test("mail blocked by another park and wait-settle mail do not open turns", () => {
+  const parked = vectors.find((v) => v.name === "run-member-parks-then-final-answer/log.jsonl");
+  const team = vectors.find((v) => v.name === "team-operator-start-and-wait/logs/team.jsonl");
+  if (parked === undefined || team === undefined) throw new Error("missing input vectors");
+  const events = parked.events.map((e) => KnownEvent.parse(e));
+  const park = events.find((e) => e.type === "parked");
+  const notice = events.find((e) => e.type === "message_received" && e.data.envelope.kind === "member_settled");
+  const wait = team.events.map((e) => KnownEvent.parse(e)).find((e) => e.type === "wait_started");
+  if (park?.type !== "parked" || notice?.type !== "message_received" || wait?.type !== "wait_started")
+    throw new Error("missing park or notice");
+  const other = KnownEvent.parse({ ...park, data: { ...park.data,
+    address: { kind: "member", id: `${park.data.address.id}-other` } } });
+  expect([...turnInputs([park, notice])]).toEqual([[1, true]]);
+  expect([...turnInputs([park, other, notice])]).toEqual([[2, false]]);
+  const member = wait.data.members[0];
+  if (member === undefined) throw new Error("missing wait member");
+  const settlement = KnownEvent.parse({ ...notice, data: { ...notice.data,
+    envelope: { ...notice.data.envelope, monitor_id: `${wait.branch_id}:${wait.event_id}:${member.name}` } } });
+  expect([...turnInputs([wait, settlement])]).toEqual([]);
 });

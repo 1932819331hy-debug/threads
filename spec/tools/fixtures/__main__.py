@@ -298,7 +298,7 @@ def _write_all(
     built_evals: pathlib.Path,
 ) -> None:
     """Write every vector file, then replace each committed fixture tree with what was built."""
-    trajectories.write()
+    trajectories.write(out)
     tool_inputs.write()
     tool_groups.write()
     team_wire.write()
@@ -352,7 +352,7 @@ def main() -> int:
             problems += anthropic_requests.check() + dynamic.check()
             problems += tool_search_vectors.check() + e2b_wire.check()
             problems += ui_vectors.check() + tar_vectors.check() + pos_int_vector.check()
-            problems += trajectories.check()
+            problems += trajectories.check(out)
             problems += web_fetch_cap.check()
             problems += a2a_vectors.check()
             problems += workspace_exclude.check() + coding_preset.check()
