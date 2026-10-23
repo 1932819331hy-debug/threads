@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { z } from "zod";
 import { secret } from "../../src/agent/secret";
 import { Store, storeOf } from "../../src/agent/sqlite";
-import { ThreadId } from "../../src/log/ids";
+import { BranchId, ThreadId } from "../../src/log/ids";
 import { JsonObject } from "../../src/log/primitives";
 import { forgetSecrets } from "../../src/redact";
 import { ok } from "../../src/result";
@@ -21,8 +21,9 @@ const Vector = z.strictObject({ name: z.string(), inputs: z.array(z.tuple([z.int
   log: z.string(), expected: z.array(Trajectory), jsonl: z.string() });
 const vectors = z.array(Vector).parse(JSON.parse(readFileSync(
   new URL("../../../../../spec/conformance/vectors/trajectories.json", import.meta.url), "utf8")));
-const vector = vectors[0];
-if (vector === undefined) throw new Error("missing trajectory vector");
+const primary = vectors[0];
+if (primary === undefined) throw new Error("missing trajectory vector");
+const vector: z.infer<typeof Vector> = primary;
 const first = vector.expected[0];
 if (first === undefined) throw new Error("missing expected trajectory");
 const utf8 = new TextDecoder();
@@ -108,13 +109,15 @@ test("ancestor completions and an incomplete turn do not create rows", () => {
 });
 
 test("a child closes an inherited open turn without replaying its parent's completions", () => {
-  const child = first.branch_id.replace(/1$/, "2");
+  const child = BranchId.parse(first.branch_id.replace(/1$/, "2"));
+  const expected = vector.expected[1];
+  if (expected === undefined) throw new Error("missing inherited-turn trajectory");
   const events = vector.events.map((event) => event["seq"] === 14 ? { ...event, branch_id: child } : event);
   const rows = utf8.decode(project(events, child)).trim().split("\n");
   expect(rows).toHaveLength(1);
   const row = Trajectory.parse(JSON.parse(rows[0] ?? "null"));
   expect(row.branch_id).toBe(child);
-  expect(row.turn_id).toBe(vector.expected[1]?.turn_id);
+  expect(row.turn_id).toBe(expected.turn_id);
 });
 
 test("failed completions are retained; compaction responses are omitted", () => {

@@ -251,7 +251,7 @@ def generate_rooted(workdir: Path, schema: Path, name: str, header: str) -> str:
     body = {k: v for k, v in root.items() if k not in ("$id", "$schema", "$defs")}
     # Preserve structural intersections and cross-field rules just as for events.
     # Condition-only definitions are inlined by norm, not emitted as loose models.
-    definitions = {**defs, name: body}
+    definitions: Obj = {**defs, name: body}
     normalizer = Normalizer({"$defs": definitions})
     normalized = {
         key: normalizer.norm(node)

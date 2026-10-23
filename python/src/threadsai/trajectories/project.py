@@ -18,9 +18,9 @@ def _object(value: JsonValue) -> dict[str, JsonValue]:
 @dataclass(frozen=True, slots=True)
 class _Turn:
     opening: Mapping[str, JsonValue]
-    messages: list[JsonValue] = field(default_factory=list)
-    calls: list[JsonValue] = field(default_factory=list)
-    results: list[JsonValue] = field(default_factory=list)
+    messages: list[JsonValue] = field(default_factory=list[JsonValue])
+    calls: list[JsonValue] = field(default_factory=list[JsonValue])
+    results: list[JsonValue] = field(default_factory=list[JsonValue])
 
     def record(self, event: Mapping[str, JsonValue], compactions: set[str]) -> None:
         kind, data = event["type"], _object(event["data"])
@@ -68,8 +68,10 @@ class _Turn:
 
 @dataclass(frozen=True, slots=True)
 class _History:
-    compactions: set[str] = field(default_factory=set)
-    late: dict[str, Mapping[str, JsonValue]] = field(default_factory=dict)
+    compactions: set[str] = field(default_factory=set[str])
+    late: dict[str, Mapping[str, JsonValue]] = field(
+        default_factory=dict[str, Mapping[str, JsonValue]]
+    )
 
     def observe(self, event: Mapping[str, JsonValue]) -> None:
         if (
