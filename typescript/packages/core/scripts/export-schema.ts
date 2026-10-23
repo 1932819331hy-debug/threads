@@ -7,8 +7,8 @@ import { Tree } from "../src/sandbox/tree/tree";
 import { Bundle } from "../src/thread/bundle";
 import { evalSchema } from "./eval-schema";
 import { specSchema } from "./spec-schema";
-import { trajectorySchema } from "./trajectory-schema";
 import { toolCatalog, toolSchema } from "./tool-catalog";
+import { trajectorySchema } from "./trajectory-schema";
 
 // bun scripts/export-schema.ts           write spec/schema/events.v1.schema.json
 // bun scripts/export-schema.ts --check   fail if the committed file differs; list every difference
@@ -145,7 +145,10 @@ function bundleSchema(): Json {
   };
 }
 
-const TRAJECTORY = join(import.meta.dir, "../../../../spec/schema/trajectory.v1.schema.json");
+const TRAJECTORY = join(
+  import.meta.dir,
+  "../../../../spec/schema/trajectory.v1.schema.json",
+);
 
 const [flag, file = SPEC] = process.argv.slice(2);
 const schema = specSchema();

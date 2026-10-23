@@ -22,7 +22,9 @@ function opens(
 
 /** Inputs by event index: true opens a turn; false is renderable mail that does not open a turn.
  * Uses the same park/settle rules as turnStart; team logs have no model turns. */
-export function turnInputs(events: readonly KnownEvent[]): ReadonlyMap<number, boolean> {
+export function turnInputs(
+  events: readonly KnownEvent[],
+): ReadonlyMap<number, boolean> {
   const inputs = new Map<number, boolean>();
   if (events[0]?.type === "team_opened") return inputs;
   let inTurn = false;
@@ -31,16 +33,29 @@ export function turnInputs(events: readonly KnownEvent[]): ReadonlyMap<number, b
   events.forEach((e, i) => {
     const opening = !inTurn && opens(e, parks, settle);
     if (opening) inTurn = true;
-    if (opening || (e.type === "message_received" && mailRenders(e.data.envelope, settle)))
+    if (
+      opening ||
+      (e.type === "message_received" && mailRenders(e.data.envelope, settle))
+    )
       inputs.set(i, opening);
     if (e.type === "turn_completed") inTurn = false;
-    else if (e.type === "parked") parks = [...parks, e.data.address];
-    else if (e.type === "resumed")
-      parks = parks.filter((p) => !sameAddress(p, e.data.address));
-    else if (e.type === "wait_started")
-      for (const m of e.data.members) settle.add(monitorId(e, m.name));
+    parks = updateWaits(e, parks, settle);
   });
   return inputs;
+}
+
+function updateWaits(
+  event: KnownEvent,
+  parks: readonly ParkAddress[],
+  settle: Set<string>,
+): readonly ParkAddress[] {
+  if (event.type === "parked") return [...parks, event.data.address];
+  if (event.type === "resumed")
+    return parks.filter((park) => !sameAddress(park, event.data.address));
+  if (event.type === "wait_started")
+    for (const member of event.data.members)
+      settle.add(monitorId(event, member.name));
+  return parks;
 }
 
 /** The index of the event that opened the open (or last) turn; undefined before any turn. */

@@ -1,7 +1,9 @@
 import { expect, test } from "bun:test";
 import { type Io, run } from "../src/cli";
 
-const forbidden = (): never => { throw new Error("invalid arguments cannot emit bytes"); };
+const forbidden = (): never => {
+  throw new Error("invalid arguments cannot emit bytes");
+};
 const io: Io = { out: forbidden, bytes: forbidden, err: () => {} };
 
 for (const args of [
@@ -13,6 +15,7 @@ for (const args of [
   ["export", "--jsonl", "--since", "9007199254740992"],
   ["export", "--jsonl", "--thread", "invalid"],
   ["timeline", "--jsonl"],
-]) test(`usage is checked before store open: ${args.join(" ")}`, async () => {
-  expect(await run(args, io)).toBe(2);
-});
+])
+  test(`usage is checked before store open: ${args.join(" ")}`, async () => {
+    expect(await run(args, io)).toBe(2);
+  });

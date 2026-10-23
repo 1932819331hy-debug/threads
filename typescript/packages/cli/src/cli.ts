@@ -82,7 +82,11 @@ function parse(argv: readonly string[]): Parsed {
   return {
     command,
     args,
-    trajectory: { jsonl: values.jsonl, threads: values.thread, since: values.since },
+    trajectory: {
+      jsonl: values.jsonl,
+      threads: values.thread,
+      since: values.since,
+    },
     store: values.store ?? ".threads",
     tenant: values.tenant,
     bundle: values.bundle,
@@ -120,7 +124,12 @@ export async function run(
     io.err(`${String(error)}\n${USAGE}`);
     return 2;
   }
-  if (p.command !== "export" && (p.trajectory.jsonl || p.trajectory.threads !== undefined || p.trajectory.since !== undefined))
+  if (
+    p.command !== "export" &&
+    (p.trajectory.jsonl ||
+      p.trajectory.threads !== undefined ||
+      p.trajectory.since !== undefined)
+  )
     return usage(io, "trajectory options require export --jsonl");
   switch (p.command) {
     case "dev":
@@ -251,8 +260,13 @@ async function timeline(p: Parsed, io: Io): Promise<number> {
 
 async function exportBranch(p: Parsed, io: Io): Promise<number> {
   if (p.trajectory.jsonl) {
-    if (p.args.length > 0 || p.bundle !== undefined) return usage(io, "--jsonl excludes branch_id and --bundle");
-    return trajectories(p.trajectory, async () => tenantStore(await storeAt(p.store), p.tenant ?? "local"), io);
+    if (p.args.length > 0 || p.bundle !== undefined)
+      return usage(io, "--jsonl excludes branch_id and --bundle");
+    return trajectories(
+      p.trajectory,
+      async () => tenantStore(await storeAt(p.store), p.tenant ?? "local"),
+      io,
+    );
   }
   if (p.trajectory.threads !== undefined || p.trajectory.since !== undefined)
     return usage(io, "--thread and --since require --jsonl");

@@ -3,7 +3,8 @@
 import { exportTrajectories, sqlite } from "threadsai";
 
 const [path, since] = process.argv.slice(2);
-if (path === undefined) throw new Error("usage: export-trajectories.ts STORE [SINCE_MS]");
+if (path === undefined)
+  throw new Error("usage: export-trajectories.ts STORE [SINCE_MS]");
 const result = await exportTrajectories(sqlite(path), {
   ...(since === undefined ? {} : { since: Number(since) }),
 });

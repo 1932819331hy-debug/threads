@@ -14,10 +14,18 @@ export async function trajectories(
   open: () => Promise<Store>,
   io: Io,
 ): Promise<number> {
-  const threads = args.threads === undefined ? undefined : ThreadId.array().safeParse(args.threads);
+  const threads =
+    args.threads === undefined
+      ? undefined
+      : ThreadId.array().safeParse(args.threads);
   const since = args.since === undefined ? undefined : Number(args.since);
-  if ((threads !== undefined && !threads.success) || (since !== undefined &&
-    (!/^\d+$/.test(args.since ?? "") || !Number.isSafeInteger(since) || since < 0))) {
+  if (
+    (threads !== undefined && !threads.success) ||
+    (since !== undefined &&
+      (!/^\d+$/.test(args.since ?? "") ||
+        !Number.isSafeInteger(since) ||
+        since < 0))
+  ) {
     io.err("invalid trajectory --thread or --since\n");
     return 2;
   }
@@ -25,7 +33,10 @@ export async function trajectories(
     ...(threads?.success ? { threads: threads.data } : {}),
     ...(since === undefined ? {} : { since }),
   });
-  if (!result.ok) { io.err(`${result.error.code}: ${result.error.message}\n`); return 1; }
+  if (!result.ok) {
+    io.err(`${result.error.code}: ${result.error.message}\n`);
+    return 1;
+  }
   io.bytes(result.value);
   return 0;
 }
