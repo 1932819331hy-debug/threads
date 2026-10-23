@@ -1068,6 +1068,14 @@
       "tests/web/test_search_unset_key.py::test_check_reports_an_unset_key_as_missing_secret[exa]"
     ]
   },
+  "exportTrajectories": {
+    "ts": [
+      "packages/core/test/trajectories/export.test.ts > two closed turns, tools and Unicode match shared canonical bytes; unfinished tail is absent"
+    ],
+    "py": [
+      "tests/trajectories/test_export.py::test_shared_bytes_and_unfinished_tail"
+    ]
+  },
   "extension": {
     "ts": [
       "packages/core/test/agent/extension.test.ts > extension() > instructions and <ext>__<tool> go into line 0; hooks get the run context"

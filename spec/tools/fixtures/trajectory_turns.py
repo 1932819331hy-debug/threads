@@ -129,15 +129,14 @@ def rows(root: Path) -> list[JsonValue]:
                 start = None
         if len(expected) != count:
             raise ValueError(f"{path}: expected {count} turns, got {len(expected)}")
-        out.append(
-            {
-                "name": path,
-                "branch_id": text(events[-1]["branch_id"]),
-                "events": events,
-                "log": raw,
-                "inputs": [[i, opens] for i, opens in ins.items()],
-                "expected": expected,
-                "jsonl": b"".join(canonical(row) + b"\n" for row in expected).decode(),
-            }
-        )
+        record: Obj = {
+            "name": path,
+            "branch_id": text(events[-1]["branch_id"]),
+            "events": [*events],
+            "log": raw,
+            "inputs": [[i, opens] for i, opens in ins.items()],
+            "expected": expected,
+            "jsonl": b"".join(canonical(row) + b"\n" for row in expected).decode(),
+        }
+        out.append(record)
     return out

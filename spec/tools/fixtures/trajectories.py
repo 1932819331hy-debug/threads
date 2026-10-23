@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from .common import BRANCH, CASES, obj, tokens
-from .jcs import JsonValue, canonical
+from .jcs import JsonValue, Obj, canonical
 from .log import Log
 from .pieces import READ_FILE, dump, read_turn, started, user
 from .trajectory_contracts import rows as contract_rows
@@ -97,18 +97,16 @@ def rows(cases: Path = CASES) -> list[JsonValue]:
     }
     user(log, "Unfinished input")
     expected: list[JsonValue] = [first_row, second]
-    return [
-        {
-            "name": "two-user-turns",
-            "branch_id": BRANCH,
-            "events": log.events,
-            "log": log.export().decode(),
-            "inputs": [[i, opens] for i, opens in inputs(log.events).items()],
-            "expected": expected,
-            "jsonl": b"".join(canonical(row) + b"\n" for row in expected).decode(),
-        },
-        *turn_rows(cases),
-    ]
+    primary: Obj = {
+        "name": "two-user-turns",
+        "branch_id": BRANCH,
+        "events": [*log.events],
+        "log": log.export().decode(),
+        "inputs": [[i, opens] for i, opens in inputs(log.events).items()],
+        "expected": expected,
+        "jsonl": b"".join(canonical(row) + b"\n" for row in expected).decode(),
+    }
+    return [primary, *turn_rows(cases)]
 
 
 def write(cases: Path = CASES) -> None:
